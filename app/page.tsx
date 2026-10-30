@@ -1,65 +1,162 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { fetchAllListings, mapListing } from "@/lib/agentbox";
+import type { Property } from "@/lib/types";
 
-export default function Home() {
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "Commercial Listings | Spinelli Commercial",
+};
+
+function PropCard({ p }: { p: Property }) {
+  const href = `https://www.spinellirealestate.com.au/property/${p.id}`;
+  const isLease = p.type === "commercial-lease";
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
+      <div style={{ border: "1px solid #E8E5DF", backgroundColor: "#fff", transition: "box-shadow 0.2s", overflow: "hidden" }}
+        onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.10)")}
+        onMouseLeave={e => (e.currentTarget.style.boxShadow = "none")}
+      >
+        {/* Image */}
+        <div style={{ position: "relative", height: "220px", backgroundColor: "#E8F6FC", overflow: "hidden" }}>
+          <Image src={p.image} alt={p.address} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+          <div style={{
+            position: "absolute", top: "12px", left: "12px",
+            backgroundColor: isLease ? "#0D3348" : "#5BC2E7",
+            color: "#fff", fontSize: "9px", fontWeight: 600,
+            letterSpacing: "0.12em", textTransform: "uppercase",
+            padding: "4px 10px", fontFamily: "var(--font-sans)",
+          }}>
+            {isLease ? "For Lease" : "For Sale"}
+          </div>
+          {p.tag && p.tag !== "For Sale" && p.tag !== "For Lease" && (
+            <div style={{
+              position: "absolute", top: "12px", right: "12px",
+              backgroundColor: "rgba(13,51,72,0.85)",
+              color: "#fff", fontSize: "9px", fontWeight: 600,
+              letterSpacing: "0.12em", textTransform: "uppercase",
+              padding: "4px 10px", fontFamily: "var(--font-sans)",
+            }}>
+              {p.tag}
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
+        <div style={{ padding: "20px" }}>
+          <p style={{ fontSize: "11px", color: "#a2b0aa", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "6px", fontFamily: "var(--font-sans)" }}>
+            {p.suburb}
+          </p>
+          <p style={{ fontSize: "15px", fontWeight: 500, color: "#0D3348", marginBottom: "8px", fontFamily: "var(--font-sans)", lineHeight: 1.3 }}>
+            {p.address}
+          </p>
+          <p style={{ fontSize: "16px", fontWeight: 600, color: "#5BC2E7", fontFamily: "var(--font-sans)", marginBottom: "12px" }}>
+            {p.price}
+          </p>
+          {(p.buildingSize || p.landSize) && (
+            <p style={{ fontSize: "12px", color: "#7a7265", fontFamily: "var(--font-sans)" }}>
+              {p.buildingSize && `${p.buildingSize} building`}
+              {p.buildingSize && p.landSize && " · "}
+              {p.landSize && `${p.landSize} land`}
+            </p>
+          )}
+        </div>
+      </div>
+    </a>
+  );
+}
+
+export default async function HomePage() {
+  let saleListings: Property[] = [];
+  let leaseListings: Property[] = [];
+
+  try {
+    const [saleRaw, leaseRaw] = await Promise.all([
+      fetchAllListings({ "filter[type]": "Sale", "filter[status]": "Available", "filter[property.type]": "Commercial", "sort[listedDate]": "desc" }, 3600),
+      fetchAllListings({ "filter[type]": "Lease", "filter[status]": "Available", "filter[property.type]": "Commercial", "sort[listedDate]": "desc" }, 3600),
+    ]);
+    saleListings = saleRaw.map(mapListing);
+    leaseListings = leaseRaw.map(mapListing);
+  } catch {
+    // fallback: show empty state
+  }
+
+  const allListings = [...saleListings, ...leaseListings];
+
+  return (
+    <>
+      {/* Hero */}
+      <section style={{ backgroundColor: "#0D3348", paddingTop: "120px", paddingBottom: "80px" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
+          <p style={{ fontSize: "11px", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "#5BC2E7", marginBottom: "16px", fontFamily: "var(--font-sans)" }}>
+            Illawarra Commercial Property
+          </p>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem, 5vw, 4rem)", fontWeight: 300, color: "#ffffff", letterSpacing: "-0.03em", lineHeight: 1.05, marginBottom: "20px" }}>
+            Buy · Lease · Sell<br />Commercial Property
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.65)", fontFamily: "var(--font-sans)", maxWidth: "52ch", lineHeight: 1.8 }}>
+            Spinelli Commercial connects businesses and investors with the right commercial spaces across Wollongong, Kiama, Shellharbour and the wider Illawarra.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Listings */}
+      <section style={{ backgroundColor: "#F8F9FA", padding: "64px 0" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
+
+          {allListings.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "80px 0" }}>
+              <p style={{ fontSize: "15px", color: "#a2b0aa", fontFamily: "var(--font-sans)" }}>No commercial listings currently available. Check back soon or <Link href="/contact" style={{ color: "#5BC2E7" }}>contact us</Link>.</p>
+            </div>
+          ) : (
+            <>
+              {saleListings.length > 0 && (
+                <div style={{ marginBottom: "56px" }}>
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "28px", borderBottom: "1px solid #E8E5DF", paddingBottom: "16px" }}>
+                    <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem", fontWeight: 300, color: "#0D3348", letterSpacing: "-0.02em" }}>For Sale</h2>
+                    <span style={{ fontSize: "12px", color: "#a2b0aa", fontFamily: "var(--font-sans)" }}>{saleListings.length} {saleListings.length === 1 ? "property" : "properties"}</span>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
+                    {saleListings.map((p) => <PropCard key={p.id} p={p} />)}
+                  </div>
+                </div>
+              )}
+
+              {leaseListings.length > 0 && (
+                <div>
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "28px", borderBottom: "1px solid #E8E5DF", paddingBottom: "16px" }}>
+                    <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem", fontWeight: 300, color: "#0D3348", letterSpacing: "-0.02em" }}>For Lease</h2>
+                    <span style={{ fontSize: "12px", color: "#a2b0aa", fontFamily: "var(--font-sans)" }}>{leaseListings.length} {leaseListings.length === 1 ? "property" : "properties"}</span>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
+                    {leaseListings.map((p) => <PropCard key={p.id} p={p} />)}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* CTA strip */}
+      <section style={{ backgroundColor: "#5BC2E7", padding: "56px 24px" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", flexWrap: "wrap", gap: "24px", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.6rem, 3vw, 2.4rem)", fontWeight: 300, color: "#ffffff", letterSpacing: "-0.03em", margin: 0 }}>
+              Looking for something specific?
+            </h2>
+            <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.8)", marginTop: "8px", fontFamily: "var(--font-sans)" }}>
+              Our commercial team will find the right property for your business.
+            </p>
+          </div>
+          <Link href="/contact" style={{ display: "inline-block", backgroundColor: "#0D3348", color: "#ffffff", padding: "14px 28px", fontSize: "12px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "var(--font-sans)", textDecoration: "none" }}>
+            Get in Touch
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }

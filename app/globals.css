@@ -2,34 +2,32 @@
 
 :root {
   --primary: #5BC2E7;
-  --primary-dark: #2da8d0;
-  --navy: #0D3348;
-  --navy-mid: #1A5570;
+  --navy: #0D1F2D;
+  --navy-mid: #1A3348;
+  --white: #FFFFFF;
+  --off-white: #F5F4F0;
   --warm: #58503C;
   --warm-light: #7A7265;
-  --sage: #A2B0AA;
-  --border: #DAD7CE;
+  --border: #2a3d4d;
   --border-light: #E8E5DF;
-  --cream: #F8F9FA;
-  --white: #FFFFFF;
-  --black: #000000;
+  --red: #BF1A1A;
 
   --font-sans: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
   scroll-behavior: smooth;
-  background-color: var(--white);
+  background-color: var(--off-white);
   overflow-x: clip;
 }
 
 body {
   color: var(--warm);
   font-family: var(--font-sans);
-  background: var(--white);
+  background: var(--off-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 15px;
@@ -40,7 +38,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--navy);
-  line-height: 1.1;
+  line-height: 1.05;
   font-weight: 300;
   letter-spacing: -0.03em;
 }
@@ -51,10 +49,10 @@ img { max-width: 100%; height: auto; display: block; }
 .label-tag {
   display: inline-block;
   font-family: var(--font-sans);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--sage);
-  margin-bottom: 16px;
+  color: var(--primary);
+  margin-bottom: 14px;
 }

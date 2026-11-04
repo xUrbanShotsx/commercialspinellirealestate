@@ -53,7 +53,7 @@ export default function Navbar() {
       {/* Announcement bar — hidden on scroll */}
       <div
         style={{
-          backgroundColor: "#0D1F2D",
+          backgroundColor: "#ffffff",
           height: "36px",
           display: "flex",
           alignItems: "center",
@@ -61,11 +61,12 @@ export default function Navbar() {
           overflow: "hidden",
           maxHeight: scrolled ? "0" : "36px",
           transition: "max-height 0.3s ease",
+          borderBottom: "1px solid #e8e5df",
         }}
       >
-        <p style={{ fontSize: "11px", color: "#5BC2E7", fontFamily: "var(--font-sans)", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
+        <p style={{ fontSize: "11px", fontWeight: 700, color: "#0D1F2D", fontFamily: "var(--font-sans)", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
           Illawarra&apos;s Commercial Property Specialists &nbsp;·&nbsp;
-          <a href="tel:0242960047" style={{ color: "#5BC2E7" }}>02 4296 0047</a>
+          <a href="tel:0242960047" style={{ color: "#0D1F2D" }}>02 4296 0047</a>
         </p>
       </div>
 
@@ -135,14 +136,13 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Divider + Nav row — hidden on scroll */}
+        {/* Nav row — hidden on scroll */}
         <div style={{
           overflow: "hidden",
           maxHeight: scrolled ? "0" : "90px",
           transition: "max-height 0.3s ease",
         }}>
-          <div style={{ borderTop: `2px solid ${scrolled ? "#0D1F2D" : "rgba(255,255,255,0.3)"}` }} />
-          <div className="hidden md:flex" style={{ justifyContent: "center", alignItems: "center", borderBottom: `2px solid ${scrolled ? "#0D1F2D" : "rgba(255,255,255,0.3)"}` }}>
+          <div className="hidden md:flex" style={{ justifyContent: "center", alignItems: "center" }}>
             {NAV.map((n) => (
               <Link
                 key={n.href}
@@ -159,6 +159,7 @@ export default function Navbar() {
                   display: "flex",
                   alignItems: "center",
                   transition: "color 0.15s",
+                  textDecoration: "none",
                 }}
               >
                 {n.label}

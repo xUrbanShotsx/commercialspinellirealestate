@@ -107,14 +107,14 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Full-bleed hero image */}
-      <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+      {/* Full-bleed hero image — exactly one viewport tall */}
+      <section style={{ position: "relative", height: "100vh", maxHeight: "100vh", overflow: "hidden" }}>
         <Image
-          src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80"
+          src="/hero.webp"
           alt="Spinelli Commercial Property"
           fill
           priority
-          style={{ objectFit: "cover", objectPosition: "center 40%" }}
+          style={{ objectFit: "cover", objectPosition: "center 60%" }}
         />
       </section>
 

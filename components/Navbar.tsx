@@ -56,17 +56,43 @@ export default function Navbar() {
           height: "36px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
           overflow: "hidden",
           maxHeight: scrolled ? "0" : "36px",
           transition: "max-height 0.3s ease",
           borderBottom: "1px solid #e8e5df",
         }}
       >
-        <p style={{ fontSize: "11px", fontWeight: 700, color: "#0D1F2D", fontFamily: "var(--font-sans)", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
-          Illawarra&apos;s Commercial Property Specialists &nbsp;·&nbsp;
-          <a href="tel:0242960047" style={{ color: "#0D1F2D" }}>02 4296 0047</a>
-        </p>
+        <style>{`
+          @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee 18s linear infinite;
+            will-change: transform;
+          }
+          .marquee-track:hover { animation-play-state: paused; }
+        `}</style>
+        <div className="marquee-track">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span
+              key={i}
+              style={{
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#0D1F2D",
+                fontFamily: "var(--font-sans)",
+                letterSpacing: "0.14em",
+                whiteSpace: "nowrap",
+                padding: "0 48px",
+              }}
+            >
+              GET A COMPLIMENTARY COMMERCIAL REPORT
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Main header */}

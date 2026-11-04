@@ -82,11 +82,12 @@ export default function ContactForm() {
         type="submit"
         disabled={loading}
         style={{
-          backgroundColor: "#5BC2E7", color: "#fff", border: "none",
-          borderRadius: "6px", padding: "16px", width: "100%",
-          fontSize: "13px", fontWeight: 500, letterSpacing: "0.06em",
+          backgroundColor: "#0D1F2D", color: "#fff", border: "none",
+          borderRadius: "8px", padding: "16px", width: "100%",
+          fontSize: "12px", fontWeight: 700, letterSpacing: "0.16em",
           textTransform: "uppercase", fontFamily: "var(--font-sans)",
           cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1,
+          height: "54px",
         }}
       >
         {loading ? "Sending…" : "Send Message"}

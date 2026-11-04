@@ -118,6 +118,35 @@ export default async function HomePage() {
         />
       </section>
 
+      {/* Brief */}
+      <section style={{ backgroundColor: "#ffffff", padding: "96px 24px" }}>
+        <div style={{ maxWidth: "760px", margin: "0 auto" }}>
+          <p style={{ fontSize: "15px", color: "#0D1F2D", lineHeight: 2, marginBottom: "28px", fontFamily: "var(--font-sans)", textAlign: "justify" }}>
+            Spinelli Commercial brings decades of local expertise to the Illawarra&apos;s commercial property market. As the dedicated commercial division of Spinelli Real Estate, we specialise in connecting business owners, investors and landlords with the right commercial opportunities — from retail tenancies and office suites to industrial facilities and development sites.
+          </p>
+          <p style={{ fontSize: "15px", color: "#0D1F2D", lineHeight: 2, marginBottom: "28px", fontFamily: "var(--font-sans)", textAlign: "justify" }}>
+            Our approach is straightforward: honest advice, deep market knowledge and a relentless focus on results. Every client works directly with our senior commercial agent — not a junior assistant — and benefits from the full weight of our experience, our network and our reputation across Wollongong, Kiama, Shellharbour and the South Coast.
+          </p>
+          <p style={{ fontSize: "15px", color: "#0D1F2D", lineHeight: 2, marginBottom: "64px", fontFamily: "var(--font-sans)", textAlign: "justify" }}>
+            Whether you are buying, leasing or selling commercial property, our commitment is the same: to deliver an exceptional outcome and a transaction experience that earns your trust for life.
+          </p>
+
+          {/* Attribution */}
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: "1.6rem", color: "#0D1F2D", letterSpacing: "-0.01em", marginBottom: "4px" }}>
+              Adam Spinelli
+            </p>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: "0.95rem", color: "#0D1F2D", letterSpacing: "0.01em", marginBottom: "24px" }}>
+              Commercial Director, Spinelli Real Estate
+            </p>
+            {/* Signature line */}
+            <svg viewBox="0 0 160 60" width="120" style={{ display: "block", margin: "0 auto", overflow: "visible" }} fill="none" stroke="#0D1F2D" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 42 C20 20, 30 15, 38 28 C44 38, 42 48, 50 42 C58 36, 55 20, 65 25 C72 29, 70 42, 78 38 C86 34, 84 22, 94 26 C102 30, 100 44, 110 40 C118 37, 116 28, 124 32 C130 35, 128 44, 136 42 C142 40, 148 34, 154 36" />
+            </svg>
+          </div>
+        </div>
+      </section>
+
       {/* Listings */}
       <section style={{ backgroundColor: "#F5F4F0", padding: "64px 0" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>

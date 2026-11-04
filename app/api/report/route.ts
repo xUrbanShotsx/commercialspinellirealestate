@@ -4,7 +4,7 @@ import { Resend } from "resend";
 export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const { firstName, lastName, address, phone, email, propertyType } = await req.json();
+    const { firstName, lastName, address, phone, email, propertyType, annualRent } = await req.json();
     if (!firstName || !email || !address) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
               ${phone ? `<tr><td style="padding: 8px 0; color: #7a7265; font-size: 13px;">Phone</td><td style="padding: 8px 0; font-size: 13px;"><a href="tel:${phone}" style="color: #5BC2E7;">${phone}</a></td></tr>` : ""}
               <tr><td style="padding: 8px 0; color: #7a7265; font-size: 13px;">Address</td><td style="padding: 8px 0; font-size: 13px;">${address}</td></tr>
               ${propertyType ? `<tr><td style="padding: 8px 0; color: #7a7265; font-size: 13px;">Property Type</td><td style="padding: 8px 0; font-size: 13px;">${propertyType}</td></tr>` : ""}
+              ${annualRent ? `<tr><td style="padding: 8px 0; color: #7a7265; font-size: 13px;">Annual Rent</td><td style="padding: 8px 0; font-size: 13px;">${annualRent}</td></tr>` : ""}
             </table>
           </div>
         </div>

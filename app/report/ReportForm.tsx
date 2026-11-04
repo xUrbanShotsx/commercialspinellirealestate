@@ -49,6 +49,7 @@ export default function ReportForm() {
       phone: fd.get("phone"),
       email: fd.get("email"),
       propertyType: fd.get("propertyType"),
+      annualRent: fd.get("annualRent"),
     };
     try {
       const res = await fetch("/api/report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -103,6 +104,12 @@ export default function ReportForm() {
           <option value="">Select a type</option>
           {PROPERTY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
         </select>
+      </div>
+      <div style={{ gridColumn: "1 / -1" }}>
+        <label style={LABEL}>
+          Annual rent return <span style={{ color: "#c8d0ce", fontWeight: 400, letterSpacing: 0 }}>(optional)</span>
+        </label>
+        <input name="annualRent" placeholder="e.g. $48,000 / year" style={INPUT} />
       </div>
       <div style={{ gridColumn: "1 / -1" }}>
         <button

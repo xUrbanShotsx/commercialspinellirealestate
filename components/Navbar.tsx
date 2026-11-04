@@ -129,7 +129,7 @@ export default function Navbar() {
         }}
       >
         {/* Logo row */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "1280px", margin: "0 auto", padding: "0 24px", height: "84px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", padding: "0 40px", height: "84px", borderBottom: `1px solid ${scrolled ? "#E8E5DF" : "rgba(255,255,255,0.25)"}`, transition: "border-color 0.3s" }}>
 
           {/* Left — hamburger / close toggle */}
           <button

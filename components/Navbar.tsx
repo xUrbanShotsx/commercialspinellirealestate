@@ -77,8 +77,9 @@ export default function Navbar() {
         `}</style>
         <div className="marquee-track">
           {Array.from({ length: 8 }).map((_, i) => (
-            <span
+            <Link
               key={i}
+              href="/report"
               style={{
                 fontSize: "11px",
                 fontWeight: 700,
@@ -87,10 +88,12 @@ export default function Navbar() {
                 letterSpacing: "0.14em",
                 whiteSpace: "nowrap",
                 padding: "0 48px",
+                textDecoration: "none",
+                display: "inline-block",
               }}
             >
-              GET A COMPLIMENTARY COMMERCIAL REPORT
-            </span>
+              GET A COMPLIMENTARY COMMERCIAL REPORT &nbsp;→
+            </Link>
           ))}
         </div>
       </div>

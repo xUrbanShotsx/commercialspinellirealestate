@@ -37,7 +37,7 @@ export default function Footer() {
           {/* Contact + socials */}
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             <a href="tel:0242960047" style={{ fontSize: "13px", color: "#7a7265", textDecoration: "none" }}>02 4296 0047</a>
-            <a href="mailto:adam@spinellire.com" style={{ fontSize: "13px", color: "#7a7265", textDecoration: "none" }}>adam@spinellire.com</a>
+            <a href="mailto:info@spinellire.com" style={{ fontSize: "13px", color: "#7a7265", textDecoration: "none" }}>info@spinellire.com</a>
             <FooterSocials />
           </div>
         </div>

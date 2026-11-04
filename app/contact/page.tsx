@@ -49,7 +49,7 @@ export default function ContactPage() {
 
             {[
               { label: "Phone", value: "02 4296 0047", href: "tel:0242960047" },
-              { label: "Email", value: "adam@spinellire.com", href: "mailto:adam@spinellire.com" },
+              { label: "Email", value: "info@spinellire.com", href: "mailto:info@spinellire.com" },
             ].map((item) => (
               <div key={item.label} style={{ marginBottom: "36px", paddingBottom: "36px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
                 <p style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-sans)", marginBottom: "10px" }}>{item.label}</p>

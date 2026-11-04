@@ -5,6 +5,8 @@ import FooterSocials from "./FooterSocials";
 const NAV = [
   { label: "Listings", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Resources", href: "/resources" },
+  { label: "Calculators", href: "/calculators" },
   { label: "Contact", href: "/contact" },
 ];
 

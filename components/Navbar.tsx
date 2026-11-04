@@ -32,7 +32,7 @@ export default function Navbar() {
 
       {/* Announcement bar */}
       <div style={{ backgroundColor: "#0D1F2D", height: "36px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-sans)", letterSpacing: "0.08em" }}>
+        <p style={{ fontSize: "11px", color: "#5BC2E7", fontFamily: "var(--font-sans)", letterSpacing: "0.08em" }}>
           Illawarra&apos;s Commercial Property Specialists &nbsp;·&nbsp;
           <a href="tel:0242960047" style={{ color: "#5BC2E7" }}>02 4296 0047</a>
         </p>

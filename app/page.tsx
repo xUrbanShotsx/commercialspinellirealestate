@@ -108,7 +108,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Full-bleed hero image */}
-      <section style={{ position: "relative", height: "60vh", minHeight: "400px", maxHeight: "700px", overflow: "hidden" }}>
+      <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
         <Image
           src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80"
           alt="Spinelli Commercial Property"

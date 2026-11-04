@@ -129,7 +129,7 @@ export default function Navbar() {
         }}
       >
         {/* Logo row */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", padding: "0 40px", height: "84px", borderBottom: `1px solid ${scrolled ? "#E8E5DF" : "rgba(255,255,255,0.25)"}`, transition: "border-color 0.3s" }}>
+        <div style={{ display: "flex", alignItems: "center", width: "100%", padding: "0 40px", height: "84px" }}>
 
           {/* Left — hamburger / close toggle */}
           <button
@@ -156,6 +156,9 @@ export default function Navbar() {
               </>
             )}
           </button>
+
+          {/* Centre spacer — carries the white divider line, logo floats above it */}
+          <div style={{ flex: 1, alignSelf: "stretch", borderBottom: `2px solid ${scrolled ? "#E8E5DF" : "rgba(255,255,255,0.85)"}`, transition: "border-color 0.3s" }} />
 
           {/* Centre — logo */}
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>

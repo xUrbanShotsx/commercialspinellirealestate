@@ -1,55 +1,58 @@
 import Link from "next/link";
+import Image from "next/image";
+import FooterSocials from "./FooterSocials";
+
+const NAV = [
+  { label: "Listings", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: "#0D1F2D", fontFamily: "var(--font-sans)" }}>
-      {/* Top strip */}
-      <div style={{ borderBottom: "2px solid #5BC2E7" }}>
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "48px 24px", display: "flex", flexWrap: "wrap", gap: "40px", justifyContent: "space-between", alignItems: "flex-start" }}>
+    <footer style={{ backgroundColor: "#ffffff", fontFamily: "var(--font-sans)", borderTop: "1px solid #E8E5DF" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 24px" }}>
 
-          {/* Brand */}
-          <div style={{ maxWidth: "280px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-              <div style={{ width: "36px", height: "36px", backgroundColor: "#5BC2E7", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ color: "#0D1F2D", fontSize: "14px", fontWeight: 800 }}>S</span>
-              </div>
-              <div>
-                <p style={{ fontSize: "13px", fontWeight: 700, color: "#fff", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1 }}>Spinelli</p>
-                <p style={{ fontSize: "9px", color: "#5BC2E7", letterSpacing: "0.22em", textTransform: "uppercase", lineHeight: 1.4 }}>Commercial</p>
-              </div>
-            </div>
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", lineHeight: 1.8 }}>
-              Illawarra&apos;s dedicated commercial real estate specialists — Wollongong, Kiama, Shellharbour and surrounds.
-            </p>
-          </div>
+        {/* Main row */}
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "32px" }}>
 
-          {/* Nav */}
-          <div>
-            <p style={{ fontSize: "9px", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "16px" }}>Navigate</p>
-            {[{ label: "Listings", href: "/" }, { label: "About", href: "/about" }, { label: "Contact", href: "/contact" }].map((l) => (
-              <Link key={l.href} href={l.href} style={{ display: "block", fontSize: "13px", color: "rgba(255,255,255,0.55)", marginBottom: "10px", letterSpacing: "0.02em" }}>
+          {/* Logo */}
+          <Image
+            src="/logo.webp"
+            alt="Spinelli Commercial"
+            width={200}
+            height={56}
+            style={{ height: "56px", width: "auto", objectFit: "contain", filter: "invert(1)" }}
+          />
+
+          {/* Nav links */}
+          <nav style={{ display: "flex", flexWrap: "wrap", gap: "0 24px" }}>
+            {NAV.map((l) => (
+              <Link key={l.href} href={l.href} style={{ fontSize: "13px", color: "#7a7265", textDecoration: "none" }}>
                 {l.label}
               </Link>
             ))}
-            <a href="https://www.spinellirealestate.com.au" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: "13px", color: "#5BC2E7", marginTop: "16px", letterSpacing: "0.02em" }}>
-              ← Main Website
-            </a>
-          </div>
+          </nav>
 
-          {/* Contact */}
-          <div>
-            <p style={{ fontSize: "9px", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "16px" }}>Contact</p>
-            <a href="tel:0242960047" style={{ display: "block", fontSize: "13px", color: "rgba(255,255,255,0.55)", marginBottom: "10px" }}>02 4296 0047</a>
-            <a href="mailto:adam@spinellire.com" style={{ display: "block", fontSize: "13px", color: "rgba(255,255,255,0.55)", marginBottom: "10px" }}>adam@spinellire.com</a>
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)", lineHeight: 1.7, marginTop: "16px" }}>16 College Avenue<br />Shellharbour City Centre NSW</p>
+          {/* Contact + socials */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <a href="tel:0242960047" style={{ fontSize: "13px", color: "#7a7265", textDecoration: "none" }}>02 4296 0047</a>
+            <a href="mailto:adam@spinellire.com" style={{ fontSize: "13px", color: "#7a7265", textDecoration: "none" }}>adam@spinellire.com</a>
+            <FooterSocials />
           </div>
         </div>
-      </div>
 
-      {/* Bottom */}
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "20px 24px", display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between" }}>
-        <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.04em" }}>© {new Date().getFullYear()} Spinelli Real Estate. All rights reserved. Licence 10052726</p>
-        <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.04em" }}>commercial.spinellirealestate.com.au</p>
+        {/* Bottom bar */}
+        <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid #E8E5DF", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
+          <p style={{ fontSize: "11px", color: "#a2b0aa", letterSpacing: "0.02em" }}>
+            © {new Date().getFullYear()} Spinelli Real Estate. Licensed Real Estate Agent NSW.
+          </p>
+          <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+            <a href="/privacy" style={{ fontSize: "11px", color: "#a2b0aa", textDecoration: "none" }}>Privacy Policy</a>
+            <a href="/disclaimer" style={{ fontSize: "11px", color: "#a2b0aa", textDecoration: "none" }}>Disclaimer</a>
+            <a href="https://www.sanjstudio.com/" target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "#a2b0aa", textDecoration: "none" }}>Website by SanjStudio</a>
+          </div>
+        </div>
       </div>
     </footer>
   );

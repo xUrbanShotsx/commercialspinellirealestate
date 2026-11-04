@@ -76,10 +76,10 @@ export default function Navbar() {
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: "1px solid #E8E5DF" }} />
+        <div style={{ borderTop: "2px solid #0D1F2D" }} />
 
         {/* Nav row (desktop) */}
-        <div className="hidden md:flex" style={{ justifyContent: "center", alignItems: "center", borderBottom: "1px solid #E8E5DF" }}>
+        <div className="hidden md:flex" style={{ justifyContent: "center", alignItems: "center", borderBottom: "2px solid #0D1F2D" }}>
           {NAV.map((n) => (
             <Link key={n.href} href={n.href} className="nav-link">
               {n.label}

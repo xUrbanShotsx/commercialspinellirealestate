@@ -107,50 +107,15 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Full-bleed hero */}
-      <section style={{ position: "relative", minHeight: "520px", display: "flex", alignItems: "flex-end", backgroundColor: "#0D1F2D", overflow: "hidden" }}>
-        {/* Background image */}
+      {/* Full-bleed hero image */}
+      <section style={{ position: "relative", height: "60vh", minHeight: "400px", maxHeight: "700px", overflow: "hidden" }}>
         <Image
           src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80"
-          alt=""
+          alt="Spinelli Commercial Property"
           fill
           priority
-          style={{ objectFit: "cover", objectPosition: "center 40%", opacity: 0.35 }}
+          style={{ objectFit: "cover", objectPosition: "center 40%" }}
         />
-        {/* Gradient overlay */}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,31,45,0.95) 40%, rgba(13,31,45,0.5) 100%)" }} />
-
-        {/* Content */}
-        <div style={{ position: "relative", zIndex: 2, maxWidth: "1280px", margin: "0 auto", padding: "80px 24px 72px", width: "100%" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-            <div style={{ width: "40px", height: "2px", backgroundColor: "#5BC2E7" }} />
-            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)" }}>
-              Spinelli Commercial
-            </p>
-          </div>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.8rem, 6vw, 5rem)", fontWeight: 300, color: "#ffffff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "24px", maxWidth: "16ch" }}>
-            Illawarra Commercial Property
-          </h1>
-          <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.6)", fontFamily: "var(--font-sans)", maxWidth: "48ch", lineHeight: 1.75, marginBottom: "36px" }}>
-            Buy, lease or sell commercial real estate across Wollongong, Kiama, Shellharbour and the South Coast with Illawarra&apos;s dedicated commercial team.
-          </p>
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <Link href="/contact" style={{ display: "inline-block", backgroundColor: "#5BC2E7", color: "#0D1F2D", padding: "14px 28px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "var(--font-sans)" }}>
-              Enquire Now
-            </Link>
-            <a href="tel:0242960047" style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.3)", color: "rgba(255,255,255,0.8)", padding: "14px 28px", fontSize: "11px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-sans)" }}>
-              02 4296 0047
-            </a>
-          </div>
-        </div>
-
-        {/* Count badge */}
-        {totalCount > 0 && (
-          <div style={{ position: "absolute", bottom: 0, right: 0, zIndex: 2, backgroundColor: "#5BC2E7", padding: "16px 28px" }}>
-            <p style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#0D1F2D", fontFamily: "var(--font-sans)", marginBottom: "2px" }}>Active</p>
-            <p style={{ fontSize: "22px", fontWeight: 700, color: "#0D1F2D", fontFamily: "var(--font-display)", letterSpacing: "-0.03em", lineHeight: 1 }}>{totalCount} <span style={{ fontSize: "12px", fontWeight: 500 }}>Listings</span></p>
-          </div>
-        )}
       </section>
 
       {/* Listings */}

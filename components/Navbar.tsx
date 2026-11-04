@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NAV = [
   { label: "Listings", href: "/" },
@@ -19,8 +20,6 @@ export default function Navbar() {
   }, []);
 
   const textColor = scrolled ? "#0D1F2D" : "#ffffff";
-  const logoSquareBg = scrolled ? "#0D1F2D" : "rgba(255,255,255,0.15)";
-  const logoSquareBorder = scrolled ? "none" : "1px solid rgba(255,255,255,0.4)";
   const hamburgerColor = scrolled ? "#0D1F2D" : "#ffffff";
 
   return (
@@ -97,22 +96,21 @@ export default function Navbar() {
           </a>
 
           {/* Centre — logo */}
-          <Link href="/" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", textDecoration: "none" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div style={{
-                width: "30px", height: "30px",
-                backgroundColor: logoSquareBg,
-                border: logoSquareBorder,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                transition: "background-color 0.3s, border 0.3s",
-              }}>
-                <span style={{ color: "#5BC2E7", fontSize: "13px", fontWeight: 800, fontFamily: "var(--font-sans)" }}>S</span>
-              </div>
-              <div style={{ textAlign: "left" }}>
-                <p style={{ margin: 0, fontSize: "15px", fontWeight: 700, color: textColor, letterSpacing: "0.1em", fontFamily: "var(--font-sans)", lineHeight: 1, textTransform: "uppercase", transition: "color 0.3s" }}>Spinelli</p>
-                <p style={{ margin: 0, fontSize: "8px", fontWeight: 600, color: "#5BC2E7", letterSpacing: "0.26em", textTransform: "uppercase", fontFamily: "var(--font-sans)", lineHeight: 1.4 }}>Commercial</p>
-              </div>
-            </div>
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Image
+              src="/logo.webp"
+              alt="Spinelli Commercial"
+              width={220}
+              height={56}
+              style={{
+                objectFit: "contain",
+                filter: scrolled ? "invert(1)" : "none",
+                transition: "filter 0.3s",
+                height: "44px",
+                width: "auto",
+              }}
+              priority
+            />
           </Link>
 
           {/* Right — enquire (desktop) / hamburger (mobile) */}

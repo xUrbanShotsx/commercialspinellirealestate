@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,6 +12,7 @@ const NAV = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -19,26 +20,23 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const iconColor = scrolled ? "#0D1F2D" : "#ffffff";
   const textColor = scrolled ? "#0D1F2D" : "#ffffff";
-  const hamburgerColor = scrolled ? "#0D1F2D" : "#ffffff";
 
   return (
     <>
       <style>{`
-        .nav-link {
-          font-family: var(--font-sans);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: #0D1F2D;
-          padding: 0 20px;
-          height: 44px;
-          display: flex;
-          align-items: center;
-          transition: color 0.15s;
-        }
-        .nav-link:hover { color: #5BC2E7; }
         .navbar-top {
           position: fixed;
           top: 0;
@@ -47,6 +45,43 @@ export default function Navbar() {
           z-index: 100;
           transition: background-color 0.3s, box-shadow 0.3s;
         }
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .marquee-track {
+          display: flex;
+          width: max-content;
+          animation: marquee 18s linear infinite;
+          will-change: transform;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        .hamburger-dropdown {
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 0;
+          background: #ffffff;
+          border: 1px solid #E8E5DF;
+          border-radius: 10px;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+          min-width: 180px;
+          overflow: hidden;
+        }
+        .hamburger-dropdown a {
+          display: block;
+          padding: 14px 20px;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #0D1F2D;
+          text-decoration: none;
+          font-family: var(--font-sans);
+          border-bottom: 1px solid #F0EDE8;
+          transition: background 0.15s;
+        }
+        .hamburger-dropdown a:last-child { border-bottom: none; }
+        .hamburger-dropdown a:hover { background: #F9F8F6; color: #5BC2E7; }
       `}</style>
 
       {/* Announcement bar — hidden on scroll */}
@@ -62,19 +97,6 @@ export default function Navbar() {
           borderBottom: "1px solid #e8e5df",
         }}
       >
-        <style>{`
-          @keyframes marquee {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .marquee-track {
-            display: flex;
-            width: max-content;
-            animation: marquee 18s linear infinite;
-            will-change: transform;
-          }
-          .marquee-track:hover { animation-play-state: paused; }
-        `}</style>
         <div className="marquee-track">
           {Array.from({ length: 8 }).map((_, i) => (
             <Link
@@ -111,21 +133,36 @@ export default function Navbar() {
         {/* Logo row */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "1280px", margin: "0 auto", padding: "0 24px", height: "84px" }}>
 
-          {/* Left — phone (desktop only) */}
-          <a
-            href="tel:0242960047"
-            className="hidden md:block"
-            style={{
-              fontSize: "11px", fontWeight: 500, fontFamily: "var(--font-sans)", letterSpacing: "0.06em",
-              color: scrolled ? "#7a7265" : "rgba(255,255,255,0.75)",
-              transition: "color 0.3s",
-            }}
-          >
-            02 4296 0047
-          </a>
+          {/* Left — hamburger with dropdown */}
+          <div ref={menuRef} style={{ position: "relative" }}>
+            <button
+              onClick={() => setOpen(!open)}
+              aria-label="Menu"
+              style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <div style={{ width: "22px", display: "flex", flexDirection: "column", gap: "5px" }}>
+                <span style={{ display: "block", height: "2px", backgroundColor: iconColor, transition: "background-color 0.3s, transform 0.2s", transform: open ? "translateY(7px) rotate(45deg)" : "none" }} />
+                <span style={{ display: "block", height: "2px", backgroundColor: iconColor, transition: "background-color 0.3s, opacity 0.2s", opacity: open ? 0 : 1 }} />
+                <span style={{ display: "block", height: "2px", backgroundColor: iconColor, transition: "background-color 0.3s, transform 0.2s", transform: open ? "translateY(-7px) rotate(-45deg)" : "none" }} />
+              </div>
+              <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: iconColor, fontFamily: "var(--font-sans)", transition: "color 0.3s" }}>
+                Menu
+              </span>
+            </button>
+
+            {open && (
+              <div className="hamburger-dropdown">
+                {NAV.map((n) => (
+                  <Link key={n.href} href={n.href} onClick={() => setOpen(false)}>
+                    {n.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Centre — logo */}
-          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
             <Image
               src="/logo.webp"
               alt="Spinelli Commercial"
@@ -142,25 +179,17 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Right — enquire (desktop) / hamburger (mobile) */}
+          {/* Right — Enquire Now */}
           <Link
             href="/contact"
-            className="hidden md:block"
             style={{
               fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
               fontFamily: "var(--font-sans)", borderBottom: "2px solid #5BC2E7", paddingBottom: "2px",
-              color: textColor, transition: "color 0.3s",
+              color: textColor, transition: "color 0.3s", textDecoration: "none",
             }}
           >
             Enquire Now
           </Link>
-          <button onClick={() => setOpen(!open)} className="md:hidden" style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }} aria-label="Menu">
-            <div style={{ width: "22px", display: "flex", flexDirection: "column", gap: "5px" }}>
-              <span style={{ display: "block", height: "2px", backgroundColor: hamburgerColor, transition: "background-color 0.3s" }} />
-              <span style={{ display: "block", height: "2px", backgroundColor: hamburgerColor, transition: "background-color 0.3s" }} />
-              <span style={{ display: "block", height: "2px", backgroundColor: hamburgerColor, transition: "background-color 0.3s" }} />
-            </div>
-          </button>
         </div>
 
         {/* Nav row — hidden on scroll */}
@@ -194,29 +223,7 @@ export default function Navbar() {
             ))}
           </div>
         </div>
-
-        {/* Mobile menu */}
-        {open && (
-          <div style={{ backgroundColor: "#ffffff", borderTop: "1px solid #E8E5DF" }} className="md:hidden">
-            {NAV.map((n) => (
-              <Link
-                key={n.href}
-                href={n.href}
-                onClick={() => setOpen(false)}
-                style={{
-                  display: "block", padding: "14px 24px",
-                  fontSize: "11px", fontWeight: 600, letterSpacing: "0.14em",
-                  textTransform: "uppercase", color: "#0D1F2D",
-                  borderBottom: "1px solid #F0EDE8", fontFamily: "var(--font-sans)",
-                }}
-              >
-                {n.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </header>
-
     </>
   );
 }

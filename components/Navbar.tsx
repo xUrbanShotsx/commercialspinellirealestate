@@ -80,7 +80,7 @@ export default function Navbar() {
         }}
       >
         {/* Logo row */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "1280px", margin: "0 auto", padding: "0 24px", height: "64px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "1280px", margin: "0 auto", padding: "0 24px", height: "84px" }}>
 
           {/* Left — phone (desktop only) */}
           <a
@@ -106,7 +106,7 @@ export default function Navbar() {
                 objectFit: "contain",
                 filter: scrolled ? "invert(1)" : "none",
                 transition: "filter 0.3s",
-                height: "44px",
+                height: "68px",
                 width: "auto",
               }}
               priority

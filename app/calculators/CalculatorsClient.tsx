@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
-// NSW Transfer Duty rates 2024-25
+/* ── NSW Transfer Duty bands (2024-25) ───────────────────────── */
 function calcStampDuty(price: number): number {
   if (price <= 14000)   return price * 0.0125;
   if (price <= 31000)   return 175   + (price - 14000)  * 0.015;
@@ -11,176 +11,424 @@ function calcStampDuty(price: number): number {
   return                       41820 + (price - 1033000) * 0.055;
 }
 
-function fmt(n: number) {
+function fmtDollar(n: number) {
   return "$" + Math.round(n).toLocaleString("en-AU");
 }
 
-function pct(n: number) {
-  return n.toFixed(2) + "%";
+/* ── Count-up animation ──────────────────────────────────────── */
+function useCountUp(target: number, duration = 650): number {
+  const [val, setVal] = useState(target);
+  const raf = useRef<number | null>(null);
+  const from = useRef(target);
+
+  useEffect(() => {
+    if (raf.current) cancelAnimationFrame(raf.current);
+    const a = from.current;
+    const b = target;
+    const t0 = performance.now();
+
+    const tick = (now: number) => {
+      const p = Math.min((now - t0) / duration, 1);
+      const e = 1 - Math.pow(1 - p, 4); // ease-out quart
+      const v = a + (b - a) * e;
+      from.current = v;
+      setVal(v);
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+      else { from.current = b; setVal(b); }
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+  }, [target, duration]);
+
+  return val;
 }
 
-const INPUT: React.CSSProperties = {
-  display: "block", width: "100%", height: "52px",
-  border: "1px solid #E8E5DF", borderRadius: "8px",
-  background: "#F9F8F6", padding: "0 16px",
-  fontSize: "15px", fontFamily: "var(--font-sans)",
-  color: "#0D1F2D", outline: "none", boxSizing: "border-box",
-};
+/* ── IntersectionObserver reveal ────────────────────────────── */
+function useReveal(delay = 0) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
-const LABEL: React.CSSProperties = {
-  display: "block", fontSize: "10px", fontWeight: 700,
-  letterSpacing: "0.18em", textTransform: "uppercase",
-  color: "#a2b0aa", marginBottom: "8px", fontFamily: "var(--font-sans)",
-};
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const timer = setTimeout(() => {
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+        { threshold: 0.07 }
+      );
+      obs.observe(el);
+      return () => obs.disconnect();
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
 
-const RESULT_ROW = ({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) => (
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "14px 0", borderBottom: "1px solid #F0EDE8" }}>
-    <span style={{ fontSize: "13px", color: "#7a7265", fontFamily: "var(--font-sans)" }}>{label}</span>
-    <span style={{ fontSize: highlight ? "1.3rem" : "15px", fontWeight: highlight ? 700 : 500, color: highlight ? "#0D1F2D" : "#0D1F2D", fontFamily: "var(--font-sans)", letterSpacing: highlight ? "-0.02em" : 0 }}>{value}</span>
-  </div>
-);
+  return { ref, visible };
+}
 
-function StampDutyCalc() {
-  const [price, setPrice] = useState("");
-  const p = parseFloat(price.replace(/,/g, "")) || 0;
-  const duty = calcStampDuty(p);
-  const hasResult = p > 0;
+/* ── Animated input component ───────────────────────────────── */
+interface InputProps {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  prefix?: string;
+  placeholder?: string;
+  optional?: boolean;
+}
+
+function CalcInput({ label, value, onChange, prefix, placeholder, optional }: InputProps) {
+  const [focused, setFocused] = useState(false);
+  const handle = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value.replace(/[^0-9.]/g, "")),
+    [onChange]
+  );
 
   return (
-    <div style={{ backgroundColor: "#ffffff", border: "1px solid #E8E5DF", padding: "40px" }}>
-      <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)", marginBottom: "10px" }}>NSW Transfer Duty</p>
-      <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 300, color: "#0D1F2D", letterSpacing: "-0.03em", marginBottom: "32px" }}>
-        Stamp Duty Calculator
-      </h2>
-
-      <div style={{ marginBottom: "28px" }}>
-        <label style={LABEL}>Purchase price</label>
-        <div style={{ position: "relative" }}>
-          <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", color: "#a2b0aa", fontFamily: "var(--font-sans)", pointerEvents: "none" }}>$</span>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="1,500,000"
-            value={price}
-            onChange={e => setPrice(e.target.value)}
-            style={{ ...INPUT, paddingLeft: "28px" }}
-          />
-        </div>
+    <div style={{ marginBottom: "36px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+        <label style={{
+          fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em",
+          textTransform: "uppercase", fontFamily: "var(--font-sans)",
+          color: focused ? "#111" : "#bbb",
+          transition: "color 0.4s cubic-bezier(0.32,0.72,0,1)",
+        }}>
+          {label}
+        </label>
+        {optional && (
+          <span style={{ fontSize: "9px", letterSpacing: "0.1em", textTransform: "uppercase", color: "#ddd", fontFamily: "var(--font-sans)" }}>
+            Optional
+          </span>
+        )}
       </div>
-
-      {hasResult ? (
-        <div style={{ borderTop: "2px solid #0D1F2D", marginTop: "8px" }}>
-          <RESULT_ROW label="Transfer duty (NSW)" value={fmt(duty)} highlight />
-          <RESULT_ROW label="Purchase price" value={fmt(p)} />
-          <RESULT_ROW label="Estimated total outlay" value={fmt(p + duty)} />
-          <p style={{ fontSize: "11px", color: "#a2b0aa", fontFamily: "var(--font-sans)", marginTop: "16px", lineHeight: 1.6 }}>
-            Estimate based on NSW transfer duty rates 2024–25. Does not include conveyancing, lender fees or other costs. Seek independent legal and financial advice.
-          </p>
-        </div>
-      ) : (
-        <div style={{ borderTop: "2px solid #E8E5DF", paddingTop: "24px" }}>
-          <p style={{ fontSize: "13px", color: "#a2b0aa", fontFamily: "var(--font-sans)", lineHeight: 1.7 }}>Enter a purchase price to calculate the NSW transfer duty (stamp duty) payable on a commercial property.</p>
-        </div>
-      )}
+      <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        {prefix && (
+          <span style={{
+            position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
+            fontFamily: "var(--font-sans)", fontSize: "20px", fontWeight: 300,
+            color: focused ? "#111" : "#ccc",
+            transition: "color 0.4s cubic-bezier(0.32,0.72,0,1)",
+            userSelect: "none", pointerEvents: "none",
+          }}>
+            {prefix}
+          </span>
+        )}
+        <input
+          type="text"
+          inputMode="decimal"
+          value={value}
+          onChange={handle}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={placeholder}
+          style={{
+            width: "100%",
+            border: "none",
+            borderBottom: `1.5px solid ${focused ? "#111" : "#E8E8E8"}`,
+            outline: "none",
+            padding: `14px 0 14px ${prefix ? "22px" : "0"}`,
+            fontSize: "22px",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 300,
+            letterSpacing: "-0.02em",
+            backgroundColor: "transparent",
+            color: "#111",
+            transition: "border-color 0.4s cubic-bezier(0.32,0.72,0,1)",
+          }}
+        />
+      </div>
     </div>
   );
 }
 
-function YieldCalc() {
-  const [price, setPrice]    = useState("");
-  const [rent, setRent]      = useState("");
-  const [rentFreq, setRentFreq] = useState<"weekly" | "annual">("weekly");
-  const [expenses, setExpenses] = useState("");
+/* ── Sliding toggle ──────────────────────────────────────────── */
+interface ToggleProps {
+  options: [string, string];
+  value: string;
+  onChange: (v: string) => void;
+}
 
-  const p  = parseFloat(price.replace(/,/g, ""))    || 0;
-  const r  = parseFloat(rent.replace(/,/g, ""))     || 0;
-  const ex = parseFloat(expenses.replace(/,/g, "")) || 0;
-
-  const annualRent = rentFreq === "weekly" ? r * 52 : r;
-  const grossYield = p > 0 ? (annualRent / p) * 100 : 0;
-  const netYield   = p > 0 ? ((annualRent - ex) / p) * 100 : 0;
-  const hasResult  = p > 0 && r > 0;
-
+function Toggle({ options, value, onChange }: ToggleProps) {
+  const isFirst = value === options[0];
   return (
-    <div style={{ backgroundColor: "#ffffff", border: "1px solid #E8E5DF", padding: "40px" }}>
-      <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)", marginBottom: "10px" }}>Return on investment</p>
-      <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 300, color: "#0D1F2D", letterSpacing: "-0.03em", marginBottom: "32px" }}>
-        Yield Calculator
-      </h2>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
-        <div style={{ gridColumn: "1 / -1" }}>
-          <label style={LABEL}>Purchase price</label>
-          <div style={{ position: "relative" }}>
-            <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", color: "#a2b0aa", fontFamily: "var(--font-sans)", pointerEvents: "none" }}>$</span>
-            <input type="text" inputMode="numeric" placeholder="1,200,000" value={price} onChange={e => setPrice(e.target.value)} style={{ ...INPUT, paddingLeft: "28px" }} />
-          </div>
-        </div>
-
-        <div>
-          <label style={LABEL}>Rental income</label>
-          <div style={{ position: "relative" }}>
-            <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", color: "#a2b0aa", fontFamily: "var(--font-sans)", pointerEvents: "none" }}>$</span>
-            <input type="text" inputMode="numeric" placeholder="1,500" value={rent} onChange={e => setRent(e.target.value)} style={{ ...INPUT, paddingLeft: "28px" }} />
-          </div>
-        </div>
-
-        <div>
-          <label style={LABEL}>Frequency</label>
-          <div style={{ display: "flex", height: "52px", border: "1px solid #E8E5DF", borderRadius: "8px", overflow: "hidden" }}>
-            {(["weekly", "annual"] as const).map(f => (
-              <button
-                key={f}
-                onClick={() => setRentFreq(f)}
-                style={{
-                  flex: 1, border: "none", cursor: "pointer",
-                  fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
-                  fontFamily: "var(--font-sans)", transition: "background 0.15s, color 0.15s",
-                  backgroundColor: rentFreq === f ? "#0D1F2D" : "#F9F8F6",
-                  color: rentFreq === f ? "#ffffff" : "#a2b0aa",
-                }}
-              >
-                {f === "weekly" ? "Weekly" : "Annual"}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ gridColumn: "1 / -1" }}>
-          <label style={LABEL}>Annual expenses <span style={{ color: "#c8d0ce", fontWeight: 400, letterSpacing: 0, textTransform: "none" }}>(optional — rates, insurance, mgmt)</span></label>
-          <div style={{ position: "relative" }}>
-            <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", color: "#a2b0aa", fontFamily: "var(--font-sans)", pointerEvents: "none" }}>$</span>
-            <input type="text" inputMode="numeric" placeholder="12,000" value={expenses} onChange={e => setExpenses(e.target.value)} style={{ ...INPUT, paddingLeft: "28px" }} />
-          </div>
-        </div>
+    <div style={{ marginBottom: "36px" }}>
+      <label style={{
+        fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase",
+        color: "#bbb", fontFamily: "var(--font-sans)", display: "block", marginBottom: "10px",
+      }}>
+        Rent Period
+      </label>
+      <div style={{ position: "relative", display: "inline-flex", backgroundColor: "#F5F5F5", padding: "2px" }}>
+        <div style={{
+          position: "absolute",
+          top: "2px", bottom: "2px", left: "2px",
+          width: "84px",
+          backgroundColor: "#111",
+          transform: `translateX(${isFirst ? "0px" : "84px"})`,
+          transition: "transform 0.42s cubic-bezier(0.32,0.72,0,1)",
+          pointerEvents: "none",
+        }} />
+        {options.map((opt) => (
+          <button
+            key={opt}
+            onClick={() => onChange(opt)}
+            style={{
+              position: "relative", zIndex: 1,
+              width: "84px", padding: "9px 0",
+              fontSize: "10px", fontWeight: 700,
+              letterSpacing: "0.14em", textTransform: "uppercase",
+              fontFamily: "var(--font-sans)",
+              color: value === opt ? "#fff" : "#aaa",
+              background: "none", border: "none", cursor: "pointer",
+              transition: "color 0.42s cubic-bezier(0.32,0.72,0,1)",
+            }}
+          >
+            {opt}
+          </button>
+        ))}
       </div>
-
-      {hasResult ? (
-        <div style={{ borderTop: "2px solid #0D1F2D", marginTop: "8px" }}>
-          <RESULT_ROW label="Annual rent" value={fmt(annualRent)} />
-          <RESULT_ROW label="Gross yield" value={pct(grossYield)} highlight />
-          {ex > 0 && <RESULT_ROW label="Net yield (after expenses)" value={pct(netYield)} highlight />}
-          <RESULT_ROW label="Weekly return" value={fmt(annualRent / 52)} />
-          <p style={{ fontSize: "11px", color: "#a2b0aa", fontFamily: "var(--font-sans)", marginTop: "16px", lineHeight: 1.6 }}>
-            Indicative only. Does not account for vacancy, capital costs or tax. Seek independent financial advice before purchasing.
-          </p>
-        </div>
-      ) : (
-        <div style={{ borderTop: "2px solid #E8E5DF", paddingTop: "24px" }}>
-          <p style={{ fontSize: "13px", color: "#a2b0aa", fontFamily: "var(--font-sans)", lineHeight: 1.7 }}>Enter a purchase price and rental income to calculate the gross and net yield on a commercial investment property.</p>
-        </div>
-      )}
     </div>
   );
 }
 
+/* ── Result row ──────────────────────────────────────────────── */
+function ResultRow({ label, value, large, accent }: { label: string; value: string; large?: boolean; accent?: boolean }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "13px 0", borderTop: "1px solid #F0F0F0" }}>
+      <span style={{ fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#bbb", fontFamily: "var(--font-sans)" }}>
+        {label}
+      </span>
+      <span style={{
+        fontFamily: "var(--font-sans)", fontSize: large ? "18px" : "15px",
+        fontWeight: large ? 500 : 400,
+        color: accent ? "#5BC2E7" : "#111",
+        letterSpacing: "-0.02em",
+      }}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+/* ── Shared reveal transition ────────────────────────────────── */
+function revealStyle(visible: boolean, delay = "0ms"): React.CSSProperties {
+  return {
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(28px)",
+    transition: `opacity 0.9s cubic-bezier(0.32,0.72,0,1) ${delay}, transform 0.9s cubic-bezier(0.32,0.72,0,1) ${delay}`,
+  };
+}
+
+/* ── Main export ─────────────────────────────────────────────── */
 export default function CalculatorsClient() {
+
+  /* Stamp duty state */
+  const [sdPrice, setSdPrice] = useState("1500000");
+  const sdP = parseFloat(sdPrice) || 0;
+  const sdDuty = calcStampDuty(sdP);
+  const sdOutlay = sdP + sdDuty;
+  const sdDutyAnim  = useCountUp(sdDuty);
+  const sdOutlayAnim = useCountUp(sdOutlay);
+
+  /* Yield state */
+  const [yPrice, setYPrice] = useState("1500000");
+  const [yRent, setYRent]   = useState("1800");
+  const [yMode, setYMode]   = useState("Weekly");
+  const [yExp, setYExp]     = useState("");
+
+  const yP = parseFloat(yPrice) || 0;
+  const yR = parseFloat(yRent)  || 0;
+  const annualRent = yMode === "Weekly" ? yR * 52 : yR;
+  const grossYield = yP > 0 ? (annualRent / yP) * 100 : 0;
+  const expenses   = parseFloat(yExp) || 0;
+  const netYield   = yP > 0 && expenses > 0 ? ((annualRent - expenses) / yP) * 100 : 0;
+
+  const grossAnim      = useCountUp(grossYield);
+  const netAnim        = useCountUp(netYield);
+  const annualRentAnim = useCountUp(annualRent);
+
+  /* Reveal hooks */
+  const header = useReveal(0);
+  const sdCard = useReveal(0);
+  const yCard  = useReveal(100);
+
   return (
-    <section style={{ backgroundColor: "#F5F4F0", padding: "80px 40px" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(420px, 1fr))", gap: "2px", backgroundColor: "#E8E5DF" }}>
-        <StampDutyCalc />
-        <YieldCalc />
-      </div>
-    </section>
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .calc-grid  { grid-template-columns: 1fr !important; }
+          .calc-card  { padding: 36px 28px !important; }
+          .calc-shift { margin-top: 0 !important; }
+          .calc-hero  { font-size: 2.4rem !important; }
+        }
+        input::placeholder { color: #DDD; }
+      `}</style>
+
+      <section style={{ backgroundColor: "#fff", paddingBottom: "120px" }}>
+
+        {/* ── Editorial header ───────────────────────────────────── */}
+        <div ref={header.ref} style={{
+          maxWidth: "1280px", margin: "0 auto",
+          padding: "120px 40px 80px",
+          ...revealStyle(header.visible),
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "32px" }}>
+            <div style={{ width: "36px", height: "1px", backgroundColor: "#5BC2E7" }} />
+            <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)" }}>
+              Tools
+            </span>
+          </div>
+          <h1 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(3.2rem, 7vw, 7rem)",
+            fontWeight: 300, color: "#111",
+            letterSpacing: "-0.045em", lineHeight: 0.93,
+            margin: "0 0 32px",
+          }}>
+            Property<br />Calculators
+          </h1>
+          <p style={{ fontSize: "16px", color: "#aaa", fontFamily: "var(--font-sans)", maxWidth: "44ch", lineHeight: 1.75, fontWeight: 400 }}>
+            Estimate transfer duty and forecast investment yields using live NSW figures. Results update as you type.
+          </p>
+        </div>
+
+        {/* ── Calculator grid ────────────────────────────────────── */}
+        <div className="calc-grid" style={{
+          maxWidth: "1280px", margin: "0 auto",
+          padding: "0 40px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "2px",
+          alignItems: "start",
+        }}>
+
+          {/* ── STAMP DUTY ─────────────────────────────────────── */}
+          <div ref={sdCard.ref} style={revealStyle(sdCard.visible)}>
+            <div style={{ border: "1px solid #EBEBEB" }}>
+              <div className="calc-card" style={{ backgroundColor: "#fff", padding: "56px 60px 52px" }}>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "48px" }}>
+                  <div>
+                    <p style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#ddd", fontFamily: "var(--font-sans)", margin: "0 0 10px" }}>
+                      NSW · 2024-25
+                    </p>
+                    <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.2rem, 2vw, 1.6rem)", fontWeight: 300, color: "#111", letterSpacing: "-0.03em", margin: 0 }}>
+                      Transfer Duty
+                    </h2>
+                  </div>
+                  <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.14em", color: "#e8e8e8", fontFamily: "var(--font-sans)", paddingTop: "4px" }}>01</span>
+                </div>
+
+                {/* Live result display */}
+                <div style={{ marginBottom: "52px", paddingBottom: "44px", borderBottom: "1px solid #F2F2F2" }}>
+                  <p style={{ fontSize: "10px", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#ccc", fontFamily: "var(--font-sans)", margin: "0 0 14px" }}>
+                    Estimated Duty
+                  </p>
+                  <div className="calc-hero" style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(2.8rem, 5vw, 4.4rem)",
+                    fontWeight: 300, color: "#111",
+                    letterSpacing: "-0.045em", lineHeight: 1,
+                    willChange: "transform",
+                  }}>
+                    {fmtDollar(sdDutyAnim)}
+                  </div>
+                </div>
+
+                <CalcInput label="Purchase Price" value={sdPrice} onChange={setSdPrice} prefix="$" placeholder="1,500,000" />
+
+                <div style={{ marginTop: "8px" }}>
+                  <ResultRow label="Transfer Duty" value={fmtDollar(sdDutyAnim)} />
+                  <ResultRow label="Purchase Price" value={fmtDollar(sdP)} />
+                  <ResultRow label="Total Outlay"   value={fmtDollar(sdOutlayAnim)} large />
+                </div>
+
+                <p style={{ marginTop: "28px", fontSize: "11px", color: "#ccc", fontFamily: "var(--font-sans)", lineHeight: 1.7 }}>
+                  Estimate only. NSW transfer duty as at 2024-25. Concessions or exemptions may apply. Confirm with your solicitor.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── YIELD ──────────────────────────────────────────── */}
+          <div ref={yCard.ref} className="calc-shift" style={{ marginTop: "56px", ...revealStyle(yCard.visible, "120ms") }}>
+            <div style={{ border: "1px solid #EBEBEB" }}>
+              <div className="calc-card" style={{ backgroundColor: "#fff", padding: "56px 60px 52px" }}>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "48px" }}>
+                  <div>
+                    <p style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#ddd", fontFamily: "var(--font-sans)", margin: "0 0 10px" }}>
+                      Investment
+                    </p>
+                    <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.2rem, 2vw, 1.6rem)", fontWeight: 300, color: "#111", letterSpacing: "-0.03em", margin: 0 }}>
+                      Yield Calculator
+                    </h2>
+                  </div>
+                  <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.14em", color: "#e8e8e8", fontFamily: "var(--font-sans)", paddingTop: "4px" }}>02</span>
+                </div>
+
+                {/* Live result display */}
+                <div style={{ marginBottom: "52px", paddingBottom: "44px", borderBottom: "1px solid #F2F2F2", display: "flex", gap: "48px" }}>
+                  <div>
+                    <p style={{ fontSize: "10px", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#ccc", fontFamily: "var(--font-sans)", margin: "0 0 14px" }}>
+                      Gross Yield
+                    </p>
+                    <div className="calc-hero" style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "clamp(2.8rem, 5vw, 4.4rem)",
+                      fontWeight: 300, color: "#111",
+                      letterSpacing: "-0.045em", lineHeight: 1,
+                    }}>
+                      {grossAnim.toFixed(2)}%
+                    </div>
+                  </div>
+
+                  {expenses > 0 && (
+                    <div style={{
+                      opacity: expenses > 0 ? 1 : 0,
+                      transform: expenses > 0 ? "translateY(0)" : "translateY(8px)",
+                      transition: "opacity 0.5s cubic-bezier(0.32,0.72,0,1), transform 0.5s cubic-bezier(0.32,0.72,0,1)",
+                    }}>
+                      <p style={{ fontSize: "10px", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#ccc", fontFamily: "var(--font-sans)", margin: "0 0 14px" }}>
+                        Net Yield
+                      </p>
+                      <div className="calc-hero" style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(2.8rem, 5vw, 4.4rem)",
+                        fontWeight: 300, color: "#5BC2E7",
+                        letterSpacing: "-0.045em", lineHeight: 1,
+                      }}>
+                        {netAnim.toFixed(2)}%
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <CalcInput label="Purchase Price"  value={yPrice} onChange={setYPrice} prefix="$" placeholder="1,500,000" />
+                <Toggle options={["Weekly", "Annual"]} value={yMode} onChange={setYMode} />
+                <CalcInput
+                  label={`${yMode} Rent`}
+                  value={yRent}
+                  onChange={setYRent}
+                  prefix="$"
+                  placeholder={yMode === "Weekly" ? "1,800" : "93,600"}
+                />
+                <CalcInput label="Annual Expenses" value={yExp} onChange={setYExp} prefix="$" placeholder="e.g. 18,000" optional />
+
+                <div style={{ marginTop: "8px" }}>
+                  <ResultRow label="Annual Rent"  value={fmtDollar(annualRentAnim)} />
+                  <ResultRow label="Weekly Return" value={fmtDollar(annualRentAnim / 52)} />
+                  <ResultRow label="Gross Yield"  value={grossAnim.toFixed(2) + "%"} large />
+                  {expenses > 0 && <ResultRow label="Net Yield" value={netAnim.toFixed(2) + "%"} large accent />}
+                </div>
+
+                <p style={{ marginTop: "28px", fontSize: "11px", color: "#ccc", fontFamily: "var(--font-sans)", lineHeight: 1.7 }}>
+                  Indicative only. Does not account for vacancy, capital costs or tax. Seek independent financial advice before purchasing.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </>
   );
 }

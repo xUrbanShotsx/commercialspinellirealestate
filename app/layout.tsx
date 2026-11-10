@@ -1,24 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter_Tight, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["300", "400", "500", "600"],
-  display: "swap",
-});
+const sans = Inter_Tight({ variable: "--font-sans", subsets: ["latin"] });
+const mono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://commercial.spinellirealestate.com.au"),
-  title: {
-    default: "Spinelli Commercial | Illawarra Commercial Property",
-    template: "%s | Spinelli Commercial",
-  },
+  title: { default: "Spinelli Commercial", template: "%s — Spinelli Commercial" },
   description:
-    "Spinelli Commercial — Illawarra's trusted commercial real estate specialists. Buy, lease or sell commercial property across Wollongong, Kiama, Shellharbour and surrounds.",
+    "Spinelli Commercial — Illawarra commercial real estate specialists. Buy, lease or sell across Wollongong, Kiama and Shellharbour.",
   keywords: [
     "commercial real estate Illawarra",
     "commercial property Wollongong",
@@ -28,25 +21,22 @@ export const metadata: Metadata = {
     "retail space Illawarra",
     "industrial property Wollongong",
     "Spinelli Commercial",
-    "commercial real estate agent Illawarra",
   ],
   openGraph: {
     type: "website",
     locale: "en_AU",
     url: "https://commercial.spinellirealestate.com.au",
     siteName: "Spinelli Commercial",
-    title: "Spinelli Commercial | Illawarra Commercial Property",
-    description: "Illawarra's trusted commercial real estate specialists — buy, lease or sell commercial property across Wollongong, Kiama and Shellharbour.",
   },
   robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-AU" className={`${inter.variable} h-full`}>
-      <body className="min-h-full flex flex-col" style={{ backgroundColor: "#0D1F2D" }}>
-        <Navbar />
-        <main className="flex-1" style={{ backgroundColor: "#F5F4F0" }}>{children}</main>
+    <html lang="en-AU" className={`${sans.variable} ${mono.variable}`}>
+      <body>
+        <Header />
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchAllListings, mapListing } from "@/lib/agentbox";
 import type { Property } from "@/lib/types";
-import ThreeFrames from "@/components/ThreeFrames";
+import Reveal from "./components/Reveal";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Commercial Listings | Spinelli Commercial",
+  title: "Commercial Listings — Spinelli Commercial",
 };
 
 function PropCard({ p }: { p: Property }) {
@@ -16,75 +16,36 @@ function PropCard({ p }: { p: Property }) {
   const isLease = p.type === "commercial-lease";
 
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ display: "block", textDecoration: "none", color: "inherit" }}
-    >
-      <article
-        style={{ backgroundColor: "#ffffff", border: "1px solid #E8E5DF", overflow: "hidden", transition: "transform 0.2s, box-shadow 0.2s" }}
-        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = "translateY(-3px)"; el.style.boxShadow = "0 12px 40px rgba(0,0,0,0.12)"; }}
-        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = "none"; el.style.boxShadow = "none"; }}
-      >
-        {/* Image */}
-        <div style={{ position: "relative", height: "200px", backgroundColor: "#1A3348", overflow: "hidden" }}>
-          <Image src={p.image} alt={p.address} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: "cover" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,31,45,0.6) 0%, transparent 50%)" }} />
-          {/* Type badge */}
-          <div style={{
-            position: "absolute", top: 0, left: 0,
-            backgroundColor: isLease ? "#0D1F2D" : "#5BC2E7",
-            color: isLease ? "#5BC2E7" : "#0D1F2D",
-            fontSize: "9px", fontWeight: 700, letterSpacing: "0.16em",
-            textTransform: "uppercase", padding: "6px 12px",
-            fontFamily: "var(--font-sans)",
-          }}>
-            {isLease ? "For Lease" : "For Sale"}
+    <a href={href} target="_blank" rel="noopener noreferrer" className="card" style={{ display: "block" }}>
+      <div style={{ position: "relative", height: 240, background: "#111", overflow: "hidden" }}>
+        <Image
+          src={p.image}
+          alt={p.address}
+          fill
+          sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
+          style={{ objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)" }}
+        />
+        <div style={{
+          position: "absolute", top: 16, left: 16,
+          fontFamily: "var(--font-mono), monospace",
+          fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
+          color: "#fff", background: "rgba(0,0,0,0.6)", padding: "5px 10px",
+          border: "1px solid rgba(255,255,255,0.2)", borderRadius: 999,
+        }}>
+          {isLease ? "For Lease" : "For Sale"}
+        </div>
+      </div>
+      <div style={{ paddingTop: 20, paddingBottom: 32, borderBottom: "1px solid var(--line-light)" }}>
+        <p className="eyebrow" style={{ marginBottom: 8 }}>{p.suburb}</p>
+        <h3 style={{ fontSize: "clamp(18px,2vw,26px)", fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 10 }}>{p.address}</h3>
+        <p style={{ fontSize: 20, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 16 }}>{p.price}</p>
+        {(p.buildingSize || p.landSize) && (
+          <div style={{ display: "flex", gap: 24, fontSize: 13, color: "var(--grey)" }}>
+            {p.buildingSize && <span>Building {p.buildingSize}</span>}
+            {p.landSize && <span>Land {p.landSize}</span>}
           </div>
-          {p.tag && (
-            <div style={{
-              position: "absolute", bottom: "12px", left: "12px",
-              backgroundColor: "rgba(13,31,45,0.9)",
-              color: "#ffffff", fontSize: "9px", fontWeight: 600,
-              letterSpacing: "0.12em", textTransform: "uppercase",
-              padding: "4px 10px", fontFamily: "var(--font-sans)",
-              border: "1px solid rgba(91,194,231,0.3)",
-            }}>
-              {p.tag}
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <div style={{ padding: "20px 20px 24px" }}>
-          <p style={{ fontSize: "10px", color: "#5BC2E7", textTransform: "uppercase", letterSpacing: "0.16em", marginBottom: "6px", fontFamily: "var(--font-sans)", fontWeight: 600 }}>
-            {p.suburb}
-          </p>
-          <h3 style={{ fontSize: "15px", fontWeight: 400, color: "#0D1F2D", marginBottom: "10px", fontFamily: "var(--font-display)", letterSpacing: "-0.01em", lineHeight: 1.3 }}>
-            {p.address}
-          </h3>
-          <p style={{ fontSize: "17px", fontWeight: 700, color: "#0D1F2D", fontFamily: "var(--font-sans)", marginBottom: "12px", letterSpacing: "-0.01em" }}>
-            {p.price}
-          </p>
-          {(p.buildingSize || p.landSize) && (
-            <div style={{ display: "flex", gap: "16px", paddingTop: "12px", borderTop: "1px solid #F0EDE8" }}>
-              {p.buildingSize && (
-                <div>
-                  <p style={{ fontSize: "9px", color: "#a2b0aa", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-sans)", marginBottom: "2px" }}>Building</p>
-                  <p style={{ fontSize: "12px", fontWeight: 500, color: "#58503C", fontFamily: "var(--font-sans)" }}>{p.buildingSize}</p>
-                </div>
-              )}
-              {p.landSize && (
-                <div>
-                  <p style={{ fontSize: "9px", color: "#a2b0aa", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-sans)", marginBottom: "2px" }}>Land</p>
-                  <p style={{ fontSize: "12px", fontWeight: 500, color: "#58503C", fontFamily: "var(--font-sans)" }}>{p.landSize}</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </article>
+        )}
+      </div>
     </a>
   );
 }
@@ -108,84 +69,85 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Full-bleed hero image — exactly one viewport tall */}
-      <section style={{ position: "relative", height: "100vh", maxHeight: "100vh", overflow: "hidden" }}>
+      {/* HERO */}
+      <section className="hero dark" style={{ position: "relative", overflow: "hidden" }}>
         <Image
           src="/hero.webp"
-          alt="Spinelli Commercial Property"
+          alt="Spinelli Commercial"
           fill
           priority
           style={{ objectFit: "cover", objectPosition: "center 60%" }}
         />
-      </section>
-
-      {/* Brief */}
-      <section style={{ backgroundColor: "#ffffff", padding: "96px 24px" }}>
-        <div style={{ maxWidth: "760px", margin: "0 auto" }}>
-          <p style={{ fontSize: "15px", color: "#0D1F2D", lineHeight: 2, marginBottom: "28px", fontFamily: "var(--font-sans)", textAlign: "justify" }}>
-            Spinelli Commercial brings decades of local expertise to the Illawarra&apos;s commercial property market. As the dedicated commercial division of Spinelli Real Estate, we specialise in connecting business owners, investors and landlords with the right commercial opportunities — from retail tenancies and office suites to industrial facilities and development sites.
-          </p>
-          <p style={{ fontSize: "15px", color: "#0D1F2D", lineHeight: 2, marginBottom: "28px", fontFamily: "var(--font-sans)", textAlign: "justify" }}>
-            Our approach is straightforward: honest advice, deep market knowledge and a relentless focus on results. Every client works directly with our senior commercial agent — not a junior assistant — and benefits from the full weight of our experience, our network and our reputation across Wollongong, Kiama, Shellharbour and the South Coast.
-          </p>
-          <p style={{ fontSize: "15px", color: "#0D1F2D", lineHeight: 2, marginBottom: "64px", fontFamily: "var(--font-sans)", textAlign: "justify" }}>
-            Whether you are buying, leasing or selling commercial property, our commitment is the same: to deliver an exceptional outcome and a transaction experience that earns your trust for life.
-          </p>
-
-          {/* Attribution */}
-          <div style={{ textAlign: "center" }}>
-            <p style={{ fontFamily: "Georgia, serif", fontSize: "1.6rem", color: "#0D1F2D", letterSpacing: "-0.01em", marginBottom: "4px" }}>
-              Adam Spinelli
-            </p>
-            <p style={{ fontFamily: "Georgia, serif", fontSize: "0.95rem", color: "#0D1F2D", letterSpacing: "0.01em", marginBottom: "24px" }}>
-              Commercial Director, Spinelli Real Estate
-            </p>
-            {/* Signature line */}
-            <svg viewBox="0 0 160 60" width="120" style={{ display: "block", margin: "0 auto", overflow: "visible" }} fill="none" stroke="#0D1F2D" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M10 42 C20 20, 30 15, 38 28 C44 38, 42 48, 50 42 C58 36, 55 20, 65 25 C72 29, 70 42, 78 38 C86 34, 84 22, 94 26 C102 30, 100 44, 110 40 C118 37, 116 28, 124 32 C130 35, 128 44, 136 42 C142 40, 148 34, 154 36" />
-            </svg>
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1 }} />
+        <div className="hero__grid" aria-hidden="true" style={{ zIndex: 2 }} />
+        <div className="wrap" style={{ position: "relative", zIndex: 3, display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: "clamp(48px,6vw,96px)", paddingTop: 140, minHeight: "100svh" }}>
+          <p className="eyebrow hero__eyebrow" style={{ color: "#fff", marginBottom: "auto", marginTop: 0 }}>Spinelli Commercial · Illawarra</p>
+          <h1 className="hero__title" style={{ color: "#fff" }}>
+            Commercial<br />Property.<br />Illawarra.
+          </h1>
+          <div className="hero__foot">
+            <p className="hero__lede">Buy · Lease · Sell — across Wollongong, Kiama, Shellharbour and the South Coast.</p>
+            <Link href="/contact" className="btn btn--light">
+              Enquire now <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      <ThreeFrames />
+      {/* STATEMENT */}
+      <section className="section light">
+        <div className="wrap statement">
+          <Reveal as="p" className="eyebrow">Our approach</Reveal>
+          <Reveal as="p" className="statement__text">
+            Commercial real estate, done properly. We work with business owners, investors and landlords across Wollongong, Kiama and Shellharbour — bringing local knowledge and a relentless focus on results.
+          </Reveal>
+        </div>
+      </section>
 
-      {/* Listings */}
-      <section style={{ backgroundColor: "#F5F4F0", padding: "64px 0" }}>
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
-
+      {/* LISTINGS */}
+      <section className="section dark">
+        <div className="wrap">
           {totalCount === 0 ? (
-            <div style={{ textAlign: "center", padding: "80px 0", borderTop: "2px solid #0D1F2D" }}>
-              <p style={{ fontSize: "15px", color: "#a2b0aa", fontFamily: "var(--font-sans)" }}>
-                No commercial listings currently available. <Link href="/contact" style={{ color: "#5BC2E7", fontWeight: 500 }}>Contact us</Link> to discuss your requirements.
-              </p>
-            </div>
+            <>
+              <div className="section__head">
+                <Reveal as="h2" className="h2">Available<br />properties</Reveal>
+              </div>
+              <Reveal>
+                <p style={{ opacity: 0.6 }}>
+                  No commercial listings currently available.{" "}
+                  <Link href="/contact" className="link">Contact us</Link> to discuss your requirements.
+                </p>
+              </Reveal>
+            </>
           ) : (
             <>
               {saleListings.length > 0 && (
-                <div style={{ marginBottom: "64px" }}>
-                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "28px", paddingBottom: "16px", borderBottom: "2px solid #0D1F2D" }}>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: "16px" }}>
-                      <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 300, color: "#0D1F2D", letterSpacing: "-0.03em" }}>For Sale</h2>
-                      <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)" }}>{saleListings.length} Properties</span>
-                    </div>
+                <div style={{ marginBottom: "clamp(60px,8vw,120px)" }}>
+                  <div className="section__head">
+                    <Reveal as="h2" className="h2">For<br />Sale</Reveal>
+                    <span className="eyebrow">{saleListings.length} {saleListings.length === 1 ? "property" : "properties"}</span>
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1px", backgroundColor: "#E8E5DF" }}>
-                    {saleListings.map((p) => <PropCard key={p.id} p={p} />)}
+                  <div className="prop-cards">
+                    {saleListings.map((p, i) => (
+                      <Reveal key={p.id} delay={i * 50}>
+                        <PropCard p={p} />
+                      </Reveal>
+                    ))}
                   </div>
                 </div>
               )}
-
               {leaseListings.length > 0 && (
                 <div>
-                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "28px", paddingBottom: "16px", borderBottom: "2px solid #0D1F2D" }}>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: "16px" }}>
-                      <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 300, color: "#0D1F2D", letterSpacing: "-0.03em" }}>For Lease</h2>
-                      <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)" }}>{leaseListings.length} Properties</span>
-                    </div>
+                  <div className="section__head">
+                    <Reveal as="h2" className="h2">For<br />Lease</Reveal>
+                    <span className="eyebrow">{leaseListings.length} {leaseListings.length === 1 ? "property" : "properties"}</span>
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1px", backgroundColor: "#E8E5DF" }}>
-                    {leaseListings.map((p) => <PropCard key={p.id} p={p} />)}
+                  <div className="prop-cards">
+                    {leaseListings.map((p, i) => (
+                      <Reveal key={p.id} delay={i * 50}>
+                        <PropCard p={p} />
+                      </Reveal>
+                    ))}
                   </div>
                 </div>
               )}
@@ -194,25 +156,30 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CTA strip */}
-      <section style={{ backgroundColor: "#0D1F2D", borderTop: "2px solid #5BC2E7", padding: "64px 24px" }}>
-        <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", flexWrap: "wrap", gap: "32px", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <p style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)", marginBottom: "12px" }}>
-              Spinelli Commercial
-            </p>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 300, color: "#ffffff", letterSpacing: "-0.03em", maxWidth: "24ch" }}>
-              Looking for something specific? Our team can help.
-            </h2>
-          </div>
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <Link href="/contact" style={{ display: "inline-block", backgroundColor: "#5BC2E7", color: "#0D1F2D", padding: "14px 28px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "var(--font-sans)" }}>
-              Get in Touch
+      {/* MARQUEE */}
+      <section className="marquee dark" aria-hidden="true">
+        <div className="marquee__track">
+          {["Wollongong", "Kiama", "Shellharbour", "South Coast", "Wollongong", "Kiama", "Shellharbour", "South Coast"].map((w, i) => (
+            <span key={i}>
+              {w}
+              <i>✱</i>
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="section cta light">
+        <div className="wrap">
+          <Reveal as="p" className="eyebrow">Work with us</Reveal>
+          <Reveal as="h2" className="cta__title">
+            Looking for<br />something<br />specific?
+          </Reveal>
+          <Reveal>
+            <Link href="/contact" className="btn btn--dark">
+              Get in touch <span aria-hidden="true">→</span>
             </Link>
-            <Link href="/about" style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.75)", padding: "14px 28px", fontSize: "11px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-sans)" }}>
-              About Us
-            </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

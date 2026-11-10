@@ -4,6 +4,8 @@ import Link from "next/link";
 import { fetchAllListings, mapListing } from "@/lib/agentbox";
 import type { Property } from "@/lib/types";
 import Reveal from "./components/Reveal";
+import HeroVideo from "./components/HeroVideo";
+import HeroChat from "./components/HeroChat";
 
 export const revalidate = 3600;
 
@@ -71,27 +73,10 @@ export default async function HomePage() {
     <>
       {/* HERO */}
       <section className="hero dark" style={{ position: "relative", overflow: "hidden" }}>
-        <Image
-          src="/hero.webp"
-          alt="Spinelli Commercial"
-          fill
-          priority
-          style={{ objectFit: "cover", objectPosition: "center 60%" }}
-        />
-        <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1 }} />
-        <div className="hero__grid" aria-hidden="true" style={{ zIndex: 2 }} />
-        <div className="wrap" style={{ position: "relative", zIndex: 3, display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: "clamp(48px,6vw,96px)", paddingTop: 140, minHeight: "100svh" }}>
-          <p className="eyebrow hero__eyebrow" style={{ color: "#fff", marginBottom: "auto", marginTop: 0 }}>Spinelli Commercial · Illawarra</p>
-          <h1 className="hero__title" style={{ color: "#fff" }}>
-            Commercial<br />Property.<br />Illawarra.
-          </h1>
-          <div className="hero__foot">
-            <p className="hero__lede">Buy · Lease · Sell — across Wollongong, Kiama, Shellharbour and the South Coast.</p>
-            <Link href="/contact" className="btn btn--light">
-              Enquire now <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </div>
+        <HeroVideo />
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.52)", zIndex: 1 }} />
+        <div className="hero__grid" aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 2 }} />
+        <HeroChat />
       </section>
 
       {/* STATEMENT */}

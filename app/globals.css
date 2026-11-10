@@ -537,6 +537,51 @@ textarea {
 .inline-link:hover { opacity: 0.55; }
 
 /* Responsive */
+/* Listings grid */
+.listings-grid {
+  display: grid;
+}
+@media (max-width: 768px) {
+  .listings-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .listings-grid > * {
+    grid-column: span 1 !important;
+  }
+}
+@media (max-width: 480px) {
+  .listings-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Inner page heroes */
+.page-hero {
+  padding: clamp(150px, 20vw, 280px) 0 clamp(50px, 8vw, 110px);
+}
+.page-hero__title {
+  font-size: clamp(52px, 11vw, 190px);
+  line-height: 0.88;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+}
+
+/* Property detail mobile */
+@media (max-width: 960px) {
+  .property-info-grid,
+  .property-desc-grid,
+  .property-enquiry-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .property-info-grid > *:first-child {
+    border-right: none !important;
+    padding-right: 0 !important;
+  }
+  .property-info-grid > *:last-child {
+    padding-left: 0 !important;
+  }
+}
+
 @media (max-width: 960px) {
   .header {
     background: var(--ink);

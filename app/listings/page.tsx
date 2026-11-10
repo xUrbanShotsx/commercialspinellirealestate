@@ -27,7 +27,7 @@ export default async function ListingsPage() {
   return (
     <>
       {/* HERO */}
-      <section className="page-hero dark" style={{ background: "#000" }}>
+      <section className="page-hero dark" style={{ background: "#306f86" }}>
         <div className="wrap">
           <Reveal as="p" className="eyebrow" style={{ color: "rgba(255,255,255,0.5)" }}>
             Current listings
@@ -73,7 +73,7 @@ export default async function ListingsPage() {
       </section>
 
       {/* CTA */}
-      <section className="section dark" style={{ background: "#000" }}>
+      <section className="section dark" style={{ background: "#306f86" }}>
         <div className="wrap">
           <Reveal as="p" className="eyebrow" style={{ color: "rgba(255,255,255,0.5)" }}>
             Off-market

@@ -19,7 +19,7 @@ function PropCard({ p }: { p: Property }) {
 
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className="card" style={{ display: "block" }}>
-      <div style={{ position: "relative", height: 240, background: "#111", overflow: "hidden" }}>
+      <div style={{ position: "relative", height: 240, background: "#1d4a58", overflow: "hidden" }}>
         <Image
           src={p.image}
           alt={p.address}
@@ -31,7 +31,7 @@ function PropCard({ p }: { p: Property }) {
           position: "absolute", top: 16, left: 16,
           fontFamily: "var(--font-mono), monospace",
           fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-          color: "#fff", background: "rgba(0,0,0,0.6)", padding: "5px 10px",
+          color: "#fff", background: "rgba(30,74,88,0.75)", padding: "5px 10px",
           border: "1px solid rgba(255,255,255,0.2)", borderRadius: 999,
         }}>
           {isLease ? "For Lease" : "For Sale"}

@@ -54,7 +54,7 @@ export default function PhotoGallery({ photos, address }: { photos: string[]; ad
           onClick={() => setLightbox(null)}
           style={{
             position: "fixed", inset: 0, zIndex: 200,
-            background: "rgba(0,0,0,0.95)",
+            background: "rgba(10,30,40,0.97)",
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "zoom-out",
           }}

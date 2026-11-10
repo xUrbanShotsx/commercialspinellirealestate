@@ -43,7 +43,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section style={{
         position: "relative", height: "100svh", minHeight: 600,
-        overflow: "hidden", background: "#000",
+        overflow: "hidden", background: "#306f86",
       }}>
         <Image src={p.image} alt={p.address} fill priority sizes="100vw"
           style={{ objectFit: "cover", opacity: 0.88 }} />
@@ -63,7 +63,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
       </section>
 
       {/* ── INFO PANEL ───────────────────────────────────────────── */}
-      <section style={{ background: "#fff", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+      <section style={{ background: "#fff", borderBottom: "1px solid rgba(48,111,134,0.12)" }}>
         <div className="wrap property-info-grid" style={{
           display: "grid",
           gridTemplateColumns: "1fr clamp(300px,36vw,520px)",
@@ -73,13 +73,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
           {/* LEFT */}
           <div style={{
             padding: "clamp(48px,6vw,96px) clamp(32px,4vw,72px) clamp(48px,6vw,96px) 0",
-            borderRight: "1px solid rgba(0,0,0,0.08)",
+            borderRight: "1px solid rgba(48,111,134,0.12)",
           }}>
             <Reveal>
               <p style={{
                 fontFamily: "var(--font-mono), monospace",
                 fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(0,0,0,0.35)", marginBottom: 28,
+                color: "rgba(48,111,134,0.5)", marginBottom: 28,
                 display: "flex", gap: 10, alignItems: "center",
               }}>
                 <Link href="/listings" style={{ color: "inherit" }}>Listings</Link>
@@ -93,10 +93,10 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 fontFamily: "var(--font-sans), sans-serif",
                 fontSize: "clamp(28px,4vw,56px)",
                 fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1.05,
-                color: "#000", marginBottom: 28,
+                color: "#306f86", marginBottom: 28,
               }}>
                 {p.address}<br />
-                <span style={{ color: "rgba(0,0,0,0.4)", fontWeight: 500 }}>
+                <span style={{ color: "rgba(48,111,134,0.5)", fontWeight: 500 }}>
                   {p.suburb.toUpperCase()}&nbsp;NSW
                 </span>
               </h1>
@@ -108,13 +108,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 {p.buildingSize && (
                   <span style={{
                     fontFamily: "var(--font-mono), monospace",
-                    fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#000",
+                    fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306f86",
                   }}>{p.buildingSize} Building</span>
                 )}
                 {p.landSize && (
                   <span style={{
                     fontFamily: "var(--font-mono), monospace",
-                    fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#000",
+                    fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306f86",
                   }}>{p.landSize} Land</span>
                 )}
               </div>
@@ -124,9 +124,9 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               <p style={{
                 fontFamily: "var(--font-mono), monospace",
                 fontSize: 11, letterSpacing: "0.1em",
-                color: "rgba(0,0,0,0.5)", marginBottom: 48,
+                color: "rgba(48,111,134,0.6)", marginBottom: 48,
               }}>
-                <span style={{ color: "#000", fontWeight: 600 }}>{TYPE_LABEL[p.type] ?? "Commercial"}</span>
+                <span style={{ color: "#306f86", fontWeight: 600 }}>{TYPE_LABEL[p.type] ?? "Commercial"}</span>
                 {p.price !== "Contact Agent" ? ` — ${p.price}` : " — Contact Agent"}
               </p>
             </Reveal>
@@ -136,16 +136,16 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 <div style={{
                   display: "inline-flex", alignItems: "center", gap: 16,
                   padding: "14px 20px",
-                  border: "1px solid rgba(0,0,0,0.15)",
+                  border: "1px solid rgba(48,111,134,0.25)",
                 }}>
                   <span style={{
                     fontFamily: "var(--font-mono), monospace",
                     fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase",
-                    color: "rgba(0,0,0,0.4)",
+                    color: "rgba(48,111,134,0.5)",
                   }}>Inspection</span>
                   <span style={{
                     fontFamily: "var(--font-mono), monospace",
-                    fontSize: 11, letterSpacing: "0.08em", color: "#000",
+                    fontSize: 11, letterSpacing: "0.08em", color: "#306f86",
                   }}>{p.openHome}</span>
                 </div>
               </Reveal>
@@ -164,13 +164,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                   {/* agent 1 */}
                   <div>
                     <div style={{
-                      aspectRatio: "3/4", background: "#111",
+                      aspectRatio: "3/4", background: "#1d4a58",
                       overflow: "hidden", marginBottom: 14, position: "relative",
                       filter: "grayscale(1)",
                     }}>
                       <div style={{
                         position: "absolute", inset: 0,
-                        background: "linear-gradient(135deg, #1a1a1a 0%, #000 100%)",
+                        background: "linear-gradient(135deg, #1d4a58 0%, #306f86 100%)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
                         <span style={{
@@ -183,33 +183,33 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                     <p style={{
                       fontFamily: "var(--font-mono), monospace",
                       fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-                      color: "#000", fontWeight: 600, marginBottom: 4,
+                      color: "#306f86", fontWeight: 600, marginBottom: 4,
                     }}>{p.agent}</p>
                     {p.agentPhone && (
                       <a href={`tel:${p.agentPhone.replace(/\s/g, "")}`} style={{
                         display: "block",
                         fontFamily: "var(--font-mono), monospace",
                         fontSize: 10, letterSpacing: "0.06em",
-                        color: "rgba(0,0,0,0.5)", marginBottom: 2,
+                        color: "rgba(48,111,134,0.6)", marginBottom: 2,
                       }}>{p.agentPhone}</a>
                     )}
                     <a href={`mailto:jye@spinellire.com?subject=Enquiry: ${p.address}`} style={{
                       fontFamily: "var(--font-mono), monospace",
-                      fontSize: 10, letterSpacing: "0.06em", color: "#000",
-                      borderBottom: "1px solid rgba(0,0,0,0.3)", paddingBottom: 1,
+                      fontSize: 10, letterSpacing: "0.06em", color: "#306f86",
+                      borderBottom: "1px solid rgba(48,111,134,0.3)", paddingBottom: 1,
                     }}>Email agent</a>
                   </div>
 
                   {/* agent 2 */}
                   <div>
                     <div style={{
-                      aspectRatio: "3/4", background: "#111",
+                      aspectRatio: "3/4", background: "#1d4a58",
                       overflow: "hidden", marginBottom: 14, position: "relative",
                       filter: "grayscale(1)",
                     }}>
                       <div style={{
                         position: "absolute", inset: 0,
-                        background: "linear-gradient(135deg, #000 0%, #1a1a1a 100%)",
+                        background: "linear-gradient(135deg, #306f86 0%, #1d4a58 100%)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
                         <span style={{
@@ -222,18 +222,18 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                     <p style={{
                       fontFamily: "var(--font-mono), monospace",
                       fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-                      color: "#000", fontWeight: 600, marginBottom: 4,
+                      color: "#306f86", fontWeight: 600, marginBottom: 4,
                     }}>Spinelli Commercial</p>
                     <a href="tel:0242232655" style={{
                       display: "block",
                       fontFamily: "var(--font-mono), monospace",
                       fontSize: 10, letterSpacing: "0.06em",
-                      color: "rgba(0,0,0,0.5)", marginBottom: 2,
+                      color: "rgba(48,111,134,0.6)", marginBottom: 2,
                     }}>02 4223 2655</a>
                     <a href={`mailto:commercial@spinellire.com?subject=Enquiry: ${p.address}`} style={{
                       fontFamily: "var(--font-mono), monospace",
-                      fontSize: 10, letterSpacing: "0.06em", color: "#000",
-                      borderBottom: "1px solid rgba(0,0,0,0.3)", paddingBottom: 1,
+                      fontSize: 10, letterSpacing: "0.06em", color: "#306f86",
+                      borderBottom: "1px solid rgba(48,111,134,0.3)", paddingBottom: 1,
                     }}>Email agent</a>
                   </div>
                 </div>
@@ -255,14 +255,14 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               <p style={{
                 fontFamily: "var(--font-mono), monospace",
                 fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(0,0,0,0.35)", marginBottom: 40,
+                color: "rgba(48,111,134,0.5)", marginBottom: 40,
               }}>About the property</p>
             </Reveal>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {paragraphs.map((para, i) => (
                 <Reveal key={i} delay={i * 30}>
                   <p style={{
-                    fontSize: "clamp(15px,1.5vw,18px)", lineHeight: 1.75, color: "#000",
+                    fontSize: "clamp(15px,1.5vw,18px)", lineHeight: 1.75, color: "#306f86",
                     fontWeight: i === 0 ? 500 : 400, opacity: i === 0 ? 1 : 0.75,
                   }}>{para}</p>
                 </Reveal>
@@ -287,13 +287,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
       {/* ── GALLERY ──────────────────────────────────────────────── */}
       {p.photos && p.photos.length > 0 && (
-        <section style={{ background: "#fff", padding: "clamp(60px,8vw,120px) 0", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+        <section style={{ background: "#fff", padding: "clamp(60px,8vw,120px) 0", borderTop: "1px solid rgba(48,111,134,0.1)" }}>
           <div className="wrap">
             <Reveal>
               <p style={{
                 fontFamily: "var(--font-mono), monospace",
                 fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(0,0,0,0.35)", marginBottom: 40,
+                color: "rgba(48,111,134,0.5)", marginBottom: 40,
               }}>Gallery</p>
             </Reveal>
             <PhotoGallery photos={[p.image, ...p.photos]} address={p.address} />
@@ -302,7 +302,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
       )}
 
       {/* ── ENQUIRY ──────────────────────────────────────────────── */}
-      <section id="enquire" style={{ background: "#fff", padding: "clamp(80px,10vw,140px) 0", borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+      <section id="enquire" style={{ background: "#fff", padding: "clamp(80px,10vw,140px) 0", borderTop: "1px solid rgba(48,111,134,0.12)" }}>
         <div className="wrap property-enquiry-grid" style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -313,20 +313,20 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               <p style={{
                 fontFamily: "var(--font-mono), monospace",
                 fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(0,0,0,0.35)", marginBottom: 32,
+                color: "rgba(48,111,134,0.5)", marginBottom: 32,
               }}>Enquire</p>
             </Reveal>
             <Reveal delay={40}>
               <h2 style={{
                 fontSize: "clamp(36px,6vw,80px)",
                 fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 0.92,
-                color: "#000", marginBottom: 32,
+                color: "#306f86", marginBottom: 32,
               }}>Interested<br />in this<br />property?</h2>
             </Reveal>
             <Reveal delay={80}>
               <p style={{
                 fontSize: "clamp(14px,1.4vw,17px)", lineHeight: 1.7,
-                color: "rgba(0,0,0,0.5)", maxWidth: 380,
+                color: "rgba(48,111,134,0.6)", maxWidth: 380,
               }}>
                 Send us a message and we&apos;ll be in touch within the hour.
               </p>

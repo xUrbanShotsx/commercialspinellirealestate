@@ -7,8 +7,8 @@ const EASE = "cubic-bezier(0.22,1,0.36,1)";
 const inputStyle: React.CSSProperties = {
   width: "100%",
   background: "transparent",
-  border: "1px solid rgba(0,0,0,0.15)",
-  color: "#000",
+  border: "1px solid rgba(48,111,134,0.25)",
+  color: "#306f86",
   padding: "16px 20px",
   fontFamily: "var(--font-mono), monospace",
   fontSize: 12,
@@ -31,12 +31,12 @@ export default function EnquiryForm({ address, suburb }: { address: string; subu
     return (
       <div style={{
         padding: "48px 40px",
-        border: "1px solid rgba(0,0,0,0.15)",
+        border: "1px solid rgba(48,111,134,0.25)",
         display: "flex", flexDirection: "column", gap: 16,
       }}>
         <div style={{
           width: 44, height: 44, borderRadius: "50%",
-          background: "#000",
+          background: "#306f86",
           display: "flex", alignItems: "center", justifyContent: "center",
           marginBottom: 8,
         }}>
@@ -44,13 +44,13 @@ export default function EnquiryForm({ address, suburb }: { address: string; subu
         </div>
         <p style={{
           fontFamily: "var(--font-sans), sans-serif",
-          fontSize: 22, fontWeight: 600, color: "#000",
+          fontSize: 22, fontWeight: 600, color: "#306f86",
           letterSpacing: "-0.02em",
         }}>Message received.</p>
         <p style={{
           fontFamily: "var(--font-mono), monospace",
           fontSize: 11, letterSpacing: "0.08em", lineHeight: 1.7,
-          color: "rgba(0,0,0,0.5)",
+          color: "rgba(48,111,134,0.6)",
         }}>
           We&apos;ll be in touch regarding {address}, {suburb} within the next hour.
         </p>
@@ -62,29 +62,29 @@ export default function EnquiryForm({ address, suburb }: { address: string; subu
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <input
         required type="text" placeholder="Full name"
-        style={{ ...inputStyle, borderColor: focused === "name" ? "#000" : "rgba(0,0,0,0.15)" }}
+        style={{ ...inputStyle, borderColor: focused === "name" ? "#306f86" : "rgba(48,111,134,0.25)" }}
         onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
       />
       <input
         required type="email" placeholder="Email address"
-        style={{ ...inputStyle, borderColor: focused === "email" ? "#000" : "rgba(0,0,0,0.15)" }}
+        style={{ ...inputStyle, borderColor: focused === "email" ? "#306f86" : "rgba(48,111,134,0.25)" }}
         onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
       />
       <input
         type="tel" placeholder="Phone (optional)"
-        style={{ ...inputStyle, borderColor: focused === "phone" ? "#000" : "rgba(0,0,0,0.15)" }}
+        style={{ ...inputStyle, borderColor: focused === "phone" ? "#306f86" : "rgba(48,111,134,0.25)" }}
         onFocus={() => setFocused("phone")} onBlur={() => setFocused(null)}
       />
       <textarea
         rows={4}
         placeholder={`I'm interested in ${address} — please send me more details.`}
-        style={{ ...inputStyle, resize: "vertical", borderColor: focused === "msg" ? "#000" : "rgba(0,0,0,0.15)" }}
+        style={{ ...inputStyle, resize: "vertical", borderColor: focused === "msg" ? "#306f86" : "rgba(48,111,134,0.25)" }}
         onFocus={() => setFocused("msg")} onBlur={() => setFocused(null)}
       />
       <button
         type="submit"
         style={{
-          marginTop: 8, background: "#000", border: "none",
+          marginTop: 8, background: "#306f86", border: "none",
           color: "#fff", padding: "18px 32px",
           fontFamily: "var(--font-mono), monospace",
           fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase",
@@ -101,7 +101,7 @@ export default function EnquiryForm({ address, suburb }: { address: string; subu
       <p style={{
         marginTop: 12,
         fontFamily: "var(--font-mono), monospace",
-        fontSize: 9, letterSpacing: "0.1em", color: "rgba(0,0,0,0.35)",
+        fontSize: 9, letterSpacing: "0.1em", color: "rgba(48,111,134,0.5)",
         lineHeight: 1.6,
       }}>
         Your enquiry is treated with complete confidentiality.

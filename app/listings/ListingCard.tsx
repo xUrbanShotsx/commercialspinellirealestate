@@ -78,12 +78,12 @@ export default function ListingCard({ p }: { p: Property }) {
         <p style={{
           fontFamily: "var(--font-mono), monospace",
           fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-          color: "#000", marginBottom: 4,
+          color: "#306f86", marginBottom: 4,
         }}>{p.address.toUpperCase()}</p>
         <p style={{
           fontFamily: "var(--font-mono), monospace",
           fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-          color: "rgba(0,0,0,0.4)",
+          color: "rgba(48,111,134,0.5)",
         }}>{p.suburb.toUpperCase()} NSW</p>
       </div>
     </Link>

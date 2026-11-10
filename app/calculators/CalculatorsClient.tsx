@@ -153,7 +153,7 @@ function Toggle({ options, value, onChange, dark }: {
         <div style={{
           position: "absolute", top: "2px", bottom: "2px", left: "2px",
           width: "84px",
-          backgroundColor: dark ? "#5BC2E7" : "#111",
+          backgroundColor: dark ? "rgba(255,255,255,0.9)" : "#111",
           transform: `translateX(${isFirst ? "0" : "84px"})`,
           transition: "transform 0.42s cubic-bezier(0.32,0.72,0,1)",
           pointerEvents: "none",
@@ -164,7 +164,7 @@ function Toggle({ options, value, onChange, dark }: {
             fontSize: "10px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
             fontFamily: "var(--font-sans)",
             color: value === opt
-              ? (dark ? "#0D1F2D" : "#fff")
+              ? (dark ? "#111" : "#fff")
               : (dark ? "rgba(255,255,255,0.4)" : "#aaa"),
             background: "none", border: "none", cursor: "pointer",
             transition: "color 0.42s cubic-bezier(0.32,0.72,0,1)",
@@ -195,7 +195,7 @@ function Row({ label, value, large, accent, dark }: {
         fontSize: large ? "17px" : "14px",
         fontWeight: large ? 500 : 400,
         letterSpacing: "-0.02em",
-        color: accent ? "#5BC2E7" : (dark ? "rgba(255,255,255,0.85)" : "#111"),
+        color: accent ? (dark ? "#fff" : "#555") : (dark ? "rgba(255,255,255,0.85)" : "#111"),
       }}>{value}</span>
     </div>
   );
@@ -272,14 +272,14 @@ export default function CalculatorsClient() {
           box-shadow: 0 0 0 4px rgba(255,255,255,0.12);
         }
         .sd-slider::-webkit-slider-thumb:hover {
-          box-shadow: 0 0 0 8px rgba(91,194,231,0.25);
+          box-shadow: 0 0 0 8px rgba(255,255,255,0.2);
         }
         .y-slider::-webkit-slider-thumb {
           background: #111;
           box-shadow: 0 0 0 4px rgba(0,0,0,0.06);
         }
         .y-slider::-webkit-slider-thumb:hover {
-          box-shadow: 0 0 0 8px rgba(91,194,231,0.15);
+          box-shadow: 0 0 0 8px rgba(0,0,0,0.12);
         }
 
         /* ── Mobile stack ─────────────────────────────── */
@@ -304,11 +304,11 @@ export default function CalculatorsClient() {
             LEFT — STAMP DUTY  (dark panel, fixes navbar)
            ════════════════════════════════════════════════ */}
         <div className="calc-panel" style={{
-          backgroundColor: "#0A1A26",
-          padding: "140px 64px 80px",
+          backgroundColor: "#111",
+          padding: "80px 64px 80px",
           position: "relative",
           overflow: "hidden",
-          borderRight: "1px solid #5BC2E7",
+          borderRight: "1px solid rgba(255,255,255,0.12)",
         }}>
 
           {/* Ghost number */}
@@ -316,7 +316,7 @@ export default function CalculatorsClient() {
             position: "absolute", right: "-32px", bottom: "-20px",
             fontFamily: "var(--font-display)",
             fontSize: "220px", fontWeight: 700,
-            color: "rgba(91,194,231,0.04)",
+            color: "rgba(255,255,255,0.03)",
             lineHeight: 1, letterSpacing: "-0.06em",
             userSelect: "none", pointerEvents: "none",
             whiteSpace: "nowrap",
@@ -339,8 +339,8 @@ export default function CalculatorsClient() {
           {/* Header */}
           <div style={{ marginBottom: "52px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-              <div style={{ width: "28px", height: "1px", backgroundColor: "#5BC2E7" }} />
-              <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)" }}>
+              <div style={{ width: "28px", height: "1px", backgroundColor: "rgba(255,255,255,0.4)" }} />
+              <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-sans)" }}>
                 Transfer Duty
               </span>
             </div>
@@ -367,14 +367,14 @@ export default function CalculatorsClient() {
                 <div key={i} style={{ flex: 1 }}>
                   <div style={{
                     height: "3px",
-                    backgroundColor: i === band ? "#5BC2E7" : "rgba(255,255,255,0.1)",
+                    backgroundColor: i === band ? "#fff" : "rgba(255,255,255,0.1)",
                     transition: "background-color 0.5s cubic-bezier(0.32,0.72,0,1)",
                     marginBottom: "6px",
                   }} />
                   <span style={{
                     fontSize: "7px", display: "block",
                     fontFamily: "var(--font-sans)", letterSpacing: "0.08em",
-                    color: i === band ? "rgba(91,194,231,0.9)" : "rgba(255,255,255,0.18)",
+                    color: i === band ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.18)",
                     transition: "color 0.5s cubic-bezier(0.32,0.72,0,1)",
                   }}>
                     {b.rate}
@@ -394,7 +394,7 @@ export default function CalculatorsClient() {
               value={sdSliderVal}
               onChange={e => setSdPrice(e.target.value)}
               style={{
-                background: `linear-gradient(to right, #5BC2E7 ${sdSliderPct}%, rgba(255,255,255,0.12) ${sdSliderPct}%)`,
+                background: `linear-gradient(to right, #fff ${sdSliderPct}%, rgba(255,255,255,0.15) ${sdSliderPct}%)`,
               }}
             />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "6px" }}>
@@ -418,7 +418,7 @@ export default function CalculatorsClient() {
            ════════════════════════════════════════════════ */}
         <div className="calc-panel y-panel" style={{
           backgroundColor: "#fff",
-          padding: "140px 64px 80px",
+          padding: "80px 64px 80px",
           position: "relative",
           overflow: "hidden",
         }}>
@@ -451,8 +451,8 @@ export default function CalculatorsClient() {
           {/* Header */}
           <div style={{ marginBottom: "52px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-              <div style={{ width: "28px", height: "1px", backgroundColor: "#5BC2E7" }} />
-              <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#5BC2E7", fontFamily: "var(--font-sans)" }}>
+              <div style={{ width: "28px", height: "1px", backgroundColor: "rgba(0,0,0,0.3)" }} />
+              <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(0,0,0,0.4)", fontFamily: "var(--font-sans)" }}>
                 Yield Calculator
               </span>
             </div>
@@ -483,7 +483,7 @@ export default function CalculatorsClient() {
                   <div className="calc-hero-n" style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "clamp(2.4rem, 4vw, 3.6rem)",
-                    fontWeight: 300, color: "#5BC2E7",
+                    fontWeight: 300, color: "#555",
                     letterSpacing: "-0.045em", lineHeight: 1,
                   }}>
                     {netAnim.toFixed(2)}%
@@ -498,7 +498,7 @@ export default function CalculatorsClient() {
                 <div style={{
                   position: "absolute", left: 0, top: 0, bottom: 0,
                   width: `${Math.min(grossYield / 12 * 100, 100)}%`,
-                  backgroundColor: "#5BC2E7",
+                  backgroundColor: "#111",
                   transition: "width 0.65s cubic-bezier(0.32,0.72,0,1)",
                 }} />
               </div>
@@ -520,7 +520,7 @@ export default function CalculatorsClient() {
               value={ySliderVal}
               onChange={e => setYPrice(e.target.value)}
               style={{
-                background: `linear-gradient(to right, #111 ${ySliderPct}%, #E8E8E8 ${ySliderPct}%)`,
+                background: `linear-gradient(to right, #111 ${ySliderPct}%, #e8e8e8 ${ySliderPct}%)`,
               }}
             />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "6px" }}>

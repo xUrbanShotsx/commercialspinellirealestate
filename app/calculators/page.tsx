@@ -1,10 +1,23 @@
 import type { Metadata } from "next";
+import Reveal from "../components/Reveal";
 import CalculatorsClient from "./CalculatorsClient";
 
 export const metadata: Metadata = {
-  title: "Calculators | Spinelli Commercial",
+  title: "Calculators",
 };
 
 export default function CalculatorsPage() {
-  return <CalculatorsClient />;
+  return (
+    <>
+      <section className="page-hero dark">
+        <div className="wrap">
+          <Reveal as="p" className="eyebrow">Investment tools</Reveal>
+          <Reveal as="h1" className="page-hero__title">
+            Calculators.
+          </Reveal>
+        </div>
+      </section>
+      <CalculatorsClient />
+    </>
+  );
 }

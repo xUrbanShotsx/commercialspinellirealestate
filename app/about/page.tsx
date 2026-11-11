@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "../components/Reveal";
+import AboutHero from "./AboutHero";
 
 export const metadata: Metadata = {
   title: "About",
@@ -32,15 +33,7 @@ const services = [
 export default function AboutPage() {
   return (
     <>
-      {/* HERO */}
-      <section className="page-hero light">
-        <div className="wrap">
-          <Reveal as="p" className="eyebrow">About us</Reveal>
-          <Reveal as="h1" className="page-hero__title">
-            Commercial<br />Real Estate,<br />Done Properly.
-          </Reveal>
-        </div>
-      </section>
+      <AboutHero />
 
       {/* STATEMENT */}
       <section className="section light" style={{ paddingTop: 0 }}>

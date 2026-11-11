@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Reveal from "../components/Reveal";
 import ResourceFrames from "./ResourceFrames";
+import ResourcesHero from "./ResourcesHero";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -9,14 +9,7 @@ export const metadata: Metadata = {
 export default function ResourcesPage() {
   return (
     <>
-      <section className="page-hero dark">
-        <div className="wrap">
-          <Reveal as="p" className="eyebrow">Market intelligence</Reveal>
-          <Reveal as="h1" className="page-hero__title">
-            Resources.
-          </Reveal>
-        </div>
-      </section>
+      <ResourcesHero />
       <ResourceFrames />
     </>
   );

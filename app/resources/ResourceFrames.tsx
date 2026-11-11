@@ -81,7 +81,7 @@ function ResourceCard({ r }: { r: typeof RESOURCES[0] }) {
 
 export default function ResourceFrames() {
   return (
-    <section style={{ background: "#1d4a58", padding: "clamp(60px,8vw,120px) 0 clamp(80px,14vw,160px)" }}>
+    <section style={{ background: "#306f86", padding: "clamp(60px,8vw,120px) 0 clamp(80px,14vw,160px)" }}>
       <div className="wrap">
         <div className="prop-cards">
           {RESOURCES.map((r) => (

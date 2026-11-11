@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Reveal from "../components/Reveal";
+import CalculatorsHero from "./CalculatorsHero";
 import CalculatorsIndex from "./CalculatorsIndex";
 
 export const metadata: Metadata = {
@@ -9,15 +9,12 @@ export const metadata: Metadata = {
 export default function CalculatorsPage() {
   return (
     <>
-      <section className="page-hero dark">
+      <CalculatorsHero />
+      <section style={{ background: "#fff", padding: "clamp(60px,8vw,120px) 0 clamp(80px,14vw,160px)" }}>
         <div className="wrap">
-          <Reveal as="p" className="eyebrow">Investment tools</Reveal>
-          <Reveal as="h1" className="page-hero__title">
-            Calculators.
-          </Reveal>
+          <CalculatorsIndex />
         </div>
       </section>
-      <CalculatorsIndex />
     </>
   );
 }

@@ -130,14 +130,14 @@ function CalcCard({ card }: { card: Card }) {
 
 export default function CalculatorsIndex() {
   return (
-    <section style={{
+    <div style={{
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      minHeight: "80vh",
+      gap: "clamp(16px,2vw,24px)",
     }} className="calc-index-grid">
       {CARDS.map((c) => (
         <CalcCard key={c.href} card={c} />
       ))}
-    </section>
+    </div>
   );
 }

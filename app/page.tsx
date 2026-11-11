@@ -6,6 +6,8 @@ import type { Property } from "@/lib/types";
 import Reveal from "./components/Reveal";
 import HeroVideo from "./components/HeroVideo";
 import HeroChat from "./components/HeroChat";
+import FeaturedCard from "./components/FeaturedCard";
+import { FAKE_LISTINGS } from "./listings/data";
 
 export const revalidate = 3600;
 
@@ -86,6 +88,29 @@ export default async function HomePage() {
           <Reveal as="p" className="statement__text">
             Commercial real estate, done properly. We work with business owners, investors and landlords across Wollongong, Kiama and Shellharbour — bringing local knowledge and a relentless focus on results.
           </Reveal>
+        </div>
+      </section>
+
+      {/* FEATURED PROPERTIES */}
+      <section style={{ background: "#1d4a58", padding: "clamp(60px,8vw,120px) 0 clamp(80px,14vw,160px)" }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "clamp(12px,2vw,24px)",
+          padding: "0 clamp(20px,4vw,56px) clamp(20px,4vw,56px)",
+        }} className="listings-grid">
+          {FAKE_LISTINGS.slice(0, 3).map((p, i) => (
+            <FeaturedCard
+              key={p.id}
+              id={p.id}
+              image={p.image}
+              address={p.address}
+              suburb={p.suburb}
+              price={p.price}
+              type={p.type}
+              delay={i * 80}
+            />
+          ))}
         </div>
       </section>
 

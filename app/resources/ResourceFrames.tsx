@@ -46,29 +46,29 @@ function ResourceCard({ r }: { r: typeof RESOURCES[0] }) {
         </div>
       </div>
 
-      {/* Info row — mirrors PropCard text section */}
+      {/* Info row */}
       <div style={{
         paddingTop: 18,
         paddingBottom: 28,
-        borderBottom: "1px solid rgba(255,255,255,0.09)",
+        borderBottom: "1px solid rgba(0,0,0,0.1)",
       }}>
         <p style={{
           fontFamily: "var(--font-mono), monospace",
           fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
-          color: "rgba(255,255,255,0.35)",
+          color: "rgba(0,0,0,0.35)",
           marginBottom: 8,
         }}>{r.num}</p>
         <h3 style={{
           fontFamily: "var(--font-sans), sans-serif",
           fontSize: "clamp(16px,1.8vw,22px)",
           fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.15,
-          color: "#fff",
+          color: "#0f1f28",
           marginBottom: 10,
         }}>{r.title}</h3>
         <p style={{
           fontSize: "clamp(12px,1.1vw,14px)",
           lineHeight: 1.6,
-          color: "rgba(255,255,255,0.45)",
+          color: "rgba(0,0,0,0.5)",
           display: "-webkit-box",
           WebkitLineClamp: 2,
           WebkitBoxOrient: "vertical",
@@ -81,7 +81,7 @@ function ResourceCard({ r }: { r: typeof RESOURCES[0] }) {
 
 export default function ResourceFrames() {
   return (
-    <section style={{ background: "#306f86", padding: "clamp(60px,8vw,120px) 0 clamp(80px,14vw,160px)" }}>
+    <section style={{ background: "#fff", padding: "clamp(60px,8vw,120px) 0 clamp(80px,14vw,160px)" }}>
       <div className="wrap">
         <div className="prop-cards">
           {RESOURCES.map((r) => (

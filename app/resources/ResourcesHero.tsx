@@ -50,11 +50,14 @@ export default function ResourcesHero() {
     <section
       style={{
         background: "#0f1f28",
+        minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
         paddingTop: "clamp(100px, 14vw, 180px)",
         paddingBottom: 0,
       }}
     >
-      <div className="wrap" style={{ paddingBottom: 0 }}>
+      <div className="wrap" style={{ paddingBottom: 0, flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Title row — dark bg, text right-aligned */}
         <div
           style={{
@@ -80,12 +83,13 @@ export default function ResourcesHero() {
           </Reveal>
         </div>
 
-        {/* Inset image with hatch overlay */}
+        {/* Inset image with hatch overlay — grows to fill remaining viewport */}
         <div
           style={{
             position: "relative",
             width: "100%",
-            aspectRatio: "16 / 7",
+            flex: 1,
+            minHeight: "40vh",
             overflow: "hidden",
             background: "#1d3344",
           }}

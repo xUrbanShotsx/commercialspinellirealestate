@@ -548,6 +548,9 @@ textarea {
   .listings-grid > * {
     grid-column: span 1 !important;
   }
+  .calc-index-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 @media (max-width: 480px) {
   .listings-grid {

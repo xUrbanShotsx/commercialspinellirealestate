@@ -202,7 +202,7 @@ function Row({ label, value, large, accent, dark }: {
 }
 
 /* ── Main ────────────────────────────────────────────────────── */
-export default function CalculatorsClient() {
+export default function CalculatorsClient({ mode }: { mode?: "stamp" | "yield" }) {
 
   /* Stamp duty */
   const [sdPrice, setSdPrice] = useState("1500000");
@@ -237,62 +237,204 @@ export default function CalculatorsClient() {
   const sdSliderPct = sliderPct(sdSliderVal, 100000, 10000000);
   const ySliderPct  = sliderPct(ySliderVal,  100000, 10000000);
 
+  const sharedStyles = `
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 2px;
+      outline: none;
+      cursor: pointer;
+      border-radius: 0;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.32,0.72,0,1),
+                  box-shadow 0.25s cubic-bezier(0.32,0.72,0,1);
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+    input[type=range]::-moz-range-thumb {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+    .sd-slider::-webkit-slider-thumb {
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.12);
+    }
+    .sd-slider::-webkit-slider-thumb:hover { box-shadow: 0 0 0 8px rgba(255,255,255,0.2); }
+    .y-slider::-webkit-slider-thumb {
+      background: #111;
+      box-shadow: 0 0 0 4px rgba(0,0,0,0.06);
+    }
+    .y-slider::-webkit-slider-thumb:hover { box-shadow: 0 0 0 8px rgba(0,0,0,0.12); }
+    @media (max-width: 768px) {
+      .calc-split  { grid-template-columns: 1fr !important; }
+      .calc-panel  { padding: 120px 28px 60px !important; }
+      .calc-ghost  { font-size: 120px !important; }
+      .calc-hero-n { font-size: 2.6rem !important; }
+      .calc-index-grid { grid-template-columns: 1fr !important; }
+    }
+    input::placeholder { color: rgba(255,255,255,0.18) }
+    .y-panel input::placeholder { color: #DDD; }
+  `;
+
+  /* Single-panel views */
+  if (mode === "stamp") {
+    return (
+      <>
+        <style>{sharedStyles}</style>
+        <section style={{ minHeight: "100dvh" }}>
+          <div className="calc-panel" style={{
+            backgroundColor: "#111",
+            padding: "80px clamp(28px,8vw,120px) 80px",
+            position: "relative", overflow: "hidden",
+            minHeight: "100dvh",
+          }}>
+            <div className="calc-ghost" aria-hidden style={{
+              position: "absolute", right: "-32px", bottom: "-20px",
+              fontFamily: "var(--font-display)",
+              fontSize: "220px", fontWeight: 700,
+              color: "rgba(255,255,255,0.03)",
+              lineHeight: 1, letterSpacing: "-0.06em",
+              userSelect: "none", pointerEvents: "none",
+              whiteSpace: "nowrap",
+            }}>{Math.round(sdDutyAnim).toLocaleString("en-AU")}</div>
+            <div style={{
+              position: "absolute", left: "24px", top: "50%",
+              transform: "translateY(-50%) rotate(-90deg)",
+              transformOrigin: "center center",
+              fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em",
+              textTransform: "uppercase", color: "rgba(255,255,255,0.12)",
+              fontFamily: "var(--font-sans)", whiteSpace: "nowrap",
+            }}>NSW · 2024-25</div>
+            <div style={{ maxWidth: 560, margin: "0 auto" }}>
+              <div style={{ marginBottom: "52px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                  <div style={{ width: "28px", height: "1px", backgroundColor: "rgba(255,255,255,0.4)" }} />
+                  <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-sans)" }}>Transfer Duty</span>
+                </div>
+                <h2 className="calc-hero-n" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem,4vw,3.6rem)", fontWeight: 300, color: "#fff", letterSpacing: "-0.045em", lineHeight: 1, margin: 0 }}>{fmtDollar(sdDutyAnim)}</h2>
+                <p style={{ marginTop: "10px", fontSize: "11px", color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-sans)", letterSpacing: "0.06em" }}>Effective rate: {sdEffAnim.toFixed(2)}%</p>
+              </div>
+              <div style={{ marginBottom: "44px" }}>
+                <p style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", fontFamily: "var(--font-sans)", marginBottom: "10px" }}>Duty Band</p>
+                <div style={{ display: "flex", gap: "3px" }}>
+                  {BANDS.map((b, i) => (
+                    <div key={i} style={{ flex: 1 }}>
+                      <div style={{ height: "3px", backgroundColor: i === band ? "#fff" : "rgba(255,255,255,0.1)", transition: "background-color 0.5s cubic-bezier(0.32,0.72,0,1)", marginBottom: "6px" }} />
+                      <span style={{ fontSize: "7px", display: "block", fontFamily: "var(--font-sans)", letterSpacing: "0.08em", color: i === band ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.18)", transition: "color 0.5s cubic-bezier(0.32,0.72,0,1)" }}>{b.rate}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <CalcInput label="Purchase Price" value={sdPrice} onChange={setSdPrice} prefix="$" placeholder="1,500,000" dark />
+              <div style={{ marginBottom: "40px", marginTop: "-16px" }}>
+                <input type="range" min={100000} max={10000000} step={10000} className="sd-slider" value={sdSliderVal} onChange={e => setSdPrice(e.target.value)} style={{ background: `linear-gradient(to right, #fff ${sdSliderPct}%, rgba(255,255,255,0.15) ${sdSliderPct}%)` }} />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "6px" }}>
+                  <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.2)", fontFamily: "var(--font-sans)" }}>$100k</span>
+                  <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.2)", fontFamily: "var(--font-sans)" }}>$10M</span>
+                </div>
+              </div>
+              <Row label="Transfer Duty" value={fmtDollar(sdDutyAnim)} dark large />
+              <Row label="Purchase Price" value={fmtDollar(sdP)} dark />
+              <Row label="Total Outlay" value={fmtDollar(sdOutlayAnim)} dark large />
+              <p style={{ marginTop: "24px", fontSize: "11px", lineHeight: 1.7, color: "rgba(255,255,255,0.2)", fontFamily: "var(--font-sans)" }}>Estimate only. NSW 2024-25 transfer duty rates. Confirm with your solicitor.</p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  if (mode === "yield") {
+    return (
+      <>
+        <style>{sharedStyles}</style>
+        <section style={{ minHeight: "100dvh" }}>
+          <div className="calc-panel y-panel" style={{
+            backgroundColor: "#fff",
+            padding: "80px clamp(28px,8vw,120px) 80px",
+            position: "relative", overflow: "hidden",
+            minHeight: "100dvh",
+          }}>
+            <div className="calc-ghost" aria-hidden style={{
+              position: "absolute", right: "-20px", bottom: "-20px",
+              fontFamily: "var(--font-display)",
+              fontSize: "220px", fontWeight: 700,
+              color: "rgba(0,0,0,0.03)",
+              lineHeight: 1, letterSpacing: "-0.06em",
+              userSelect: "none", pointerEvents: "none",
+              whiteSpace: "nowrap",
+            }}>{grossAnim.toFixed(1)}%</div>
+            <div style={{
+              position: "absolute", right: "24px", top: "50%",
+              transform: "translateY(-50%) rotate(90deg)",
+              transformOrigin: "center center",
+              fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em",
+              textTransform: "uppercase", color: "rgba(0,0,0,0.1)",
+              fontFamily: "var(--font-sans)", whiteSpace: "nowrap",
+            }}>Investment</div>
+            <div style={{ maxWidth: 560, margin: "0 auto" }}>
+              <div style={{ marginBottom: "52px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                  <div style={{ width: "28px", height: "1px", backgroundColor: "rgba(0,0,0,0.3)" }} />
+                  <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(0,0,0,0.4)", fontFamily: "var(--font-sans)" }}>Yield Calculator</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "flex-end", gap: "36px", flexWrap: "wrap" }}>
+                  <div>
+                    <p style={{ fontSize: "9px", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#ccc", fontFamily: "var(--font-sans)", margin: "0 0 6px" }}>Gross</p>
+                    <div className="calc-hero-n" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem,4vw,3.6rem)", fontWeight: 300, color: "#111", letterSpacing: "-0.045em", lineHeight: 1 }}>{grossAnim.toFixed(2)}%</div>
+                  </div>
+                  {expenses > 0 && (
+                    <div>
+                      <p style={{ fontSize: "9px", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#ccc", fontFamily: "var(--font-sans)", margin: "0 0 6px" }}>Net</p>
+                      <div className="calc-hero-n" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem,4vw,3.6rem)", fontWeight: 300, color: "#555", letterSpacing: "-0.045em", lineHeight: 1 }}>{netAnim.toFixed(2)}%</div>
+                    </div>
+                  )}
+                </div>
+                <div style={{ marginTop: "20px" }}>
+                  <div style={{ position: "relative", height: "2px", backgroundColor: "#F0F0F0" }}>
+                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${Math.min(grossYield / 12 * 100, 100)}%`, backgroundColor: "#111", transition: "width 0.65s cubic-bezier(0.32,0.72,0,1)" }} />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "5px" }}>
+                    <span style={{ fontSize: "8px", color: "#ddd", fontFamily: "var(--font-sans)" }}>0%</span>
+                    <span style={{ fontSize: "8px", color: "#ddd", fontFamily: "var(--font-sans)" }}>6% typical</span>
+                    <span style={{ fontSize: "8px", color: "#ddd", fontFamily: "var(--font-sans)" }}>12%</span>
+                  </div>
+                </div>
+              </div>
+              <CalcInput label="Purchase Price" value={yPrice} onChange={setYPrice} prefix="$" placeholder="1,500,000" />
+              <div style={{ marginBottom: "32px", marginTop: "-16px" }}>
+                <input type="range" min={100000} max={10000000} step={10000} className="y-slider" value={ySliderVal} onChange={e => setYPrice(e.target.value)} style={{ background: `linear-gradient(to right, #111 ${ySliderPct}%, #e8e8e8 ${ySliderPct}%)` }} />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "6px" }}>
+                  <span style={{ fontSize: "9px", color: "#ddd", fontFamily: "var(--font-sans)" }}>$100k</span>
+                  <span style={{ fontSize: "9px", color: "#ddd", fontFamily: "var(--font-sans)" }}>$10M</span>
+                </div>
+              </div>
+              <Toggle options={["Weekly", "Annual"]} value={yMode} onChange={setYMode} />
+              <CalcInput label={`${yMode} Rent`} value={yRent} onChange={setYRent} prefix="$" placeholder={yMode === "Weekly" ? "1,800" : "93,600"} />
+              <CalcInput label="Annual Expenses" value={yExp} onChange={setYExp} prefix="$" placeholder="e.g. 18,000" optional />
+              <Row label="Annual Rent" value={fmtDollar(annualRentAnim)} />
+              <Row label="Gross Yield" value={grossAnim.toFixed(2) + "%"} large />
+              {expenses > 0 && <Row label="Net Yield" value={netAnim.toFixed(2) + "%"} large accent />}
+              <Row label="Weekly Return" value={fmtDollar(annualRentAnim / 52)} />
+              <p style={{ marginTop: "24px", fontSize: "11px", lineHeight: 1.7, color: "#ccc", fontFamily: "var(--font-sans)" }}>Indicative only. Does not account for vacancy, capital costs or tax. Seek independent financial advice.</p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  /* Default: split view */
   return (
     <>
-      <style>{`
-        /* ── Slider reset ─────────────────────────────── */
-        input[type=range] {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 100%;
-          height: 2px;
-          outline: none;
-          cursor: pointer;
-          border-radius: 0;
-        }
-        input[type=range]::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          width: 20px; height: 20px;
-          border-radius: 50%;
-          cursor: pointer;
-          transition: transform 0.25s cubic-bezier(0.32,0.72,0,1),
-                      box-shadow 0.25s cubic-bezier(0.32,0.72,0,1);
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-          transform: scale(1.3);
-        }
-        input[type=range]::-moz-range-thumb {
-          width: 20px; height: 20px;
-          border-radius: 50%;
-          cursor: pointer;
-          border: none;
-        }
-        .sd-slider::-webkit-slider-thumb {
-          background: #fff;
-          box-shadow: 0 0 0 4px rgba(255,255,255,0.12);
-        }
-        .sd-slider::-webkit-slider-thumb:hover {
-          box-shadow: 0 0 0 8px rgba(255,255,255,0.2);
-        }
-        .y-slider::-webkit-slider-thumb {
-          background: #111;
-          box-shadow: 0 0 0 4px rgba(0,0,0,0.06);
-        }
-        .y-slider::-webkit-slider-thumb:hover {
-          box-shadow: 0 0 0 8px rgba(0,0,0,0.12);
-        }
-
-        /* ── Mobile stack ─────────────────────────────── */
-        @media (max-width: 768px) {
-          .calc-split   { grid-template-columns: 1fr !important; }
-          .calc-panel   { padding: 120px 28px 60px !important; }
-          .calc-ghost   { font-size: 120px !important; }
-          .calc-hero-n  { font-size: 2.6rem !important; }
-        }
-        input::placeholder { color: rgba(255,255,255,0.18) }
-        .y-panel input::placeholder { color: #DDD; }
-      `}</style>
-
+      <style>{sharedStyles}</style>
       <section className="calc-split" style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",

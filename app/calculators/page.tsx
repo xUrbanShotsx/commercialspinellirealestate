@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Reveal from "../components/Reveal";
-import CalculatorsClient from "./CalculatorsClient";
+import CalculatorsIndex from "./CalculatorsIndex";
 
 export const metadata: Metadata = {
   title: "Calculators",
@@ -17,7 +17,7 @@ export default function CalculatorsPage() {
           </Reveal>
         </div>
       </section>
-      <CalculatorsClient />
+      <CalculatorsIndex />
     </>
   );
 }
